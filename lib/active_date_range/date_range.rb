@@ -31,5 +31,23 @@ module ActiveDateRange
 
       super(begin_date, end_date)
     end
+
+    def +(other)
+      raise InvalidAddition if self.end != (other.begin - 1.day)
+
+      DateRange.new(self.begin, other.end)
+    end
+
+    def one_month?
+      self.begin == self.begin.at_beginning_of_month && self.end == self.begin.at_end_of_month
+    end
+
+    def one_quarter?
+      self.begin == self.begin.at_beginning_of_quarter && self.end == self.begin.at_end_of_quarter
+    end
+
+    def one_year?
+      self.begin == self.begin.at_beginning_of_year && self.end == self.begin.at_end_of_year
+    end
   end
 end

@@ -37,4 +37,23 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 12.months.ago.to_date.all_year, ActiveDateRange::DateRange.previous_year
     assert_equal 12.months.from_now.to_date.all_year, ActiveDateRange::DateRange.next_year
   end
+
+  def test_one_methods
+    assert ActiveDateRange::DateRange.this_month.one_month?
+    assert ActiveDateRange::DateRange.this_quarter.one_quarter?
+    assert ActiveDateRange::DateRange.this_year.one_year?
+
+    assert_not ActiveDateRange::DateRange.this_month.one_quarter?
+    assert_not ActiveDateRange::DateRange.this_month.one_year?
+
+    assert_not ActiveDateRange::DateRange.this_quarter.one_month?
+    assert_not ActiveDateRange::DateRange.this_quarter.one_year?
+
+    assert_not ActiveDateRange::DateRange.this_year.one_month?
+    assert_not ActiveDateRange::DateRange.this_year.one_quarter?
+
+    assert_not (ActiveDateRange::DateRange.this_month + ActiveDateRange::DateRange.next_month).one_month?
+    assert_not (ActiveDateRange::DateRange.this_quarter + ActiveDateRange::DateRange.next_quarter).one_quarter?
+    assert_not (ActiveDateRange::DateRange.this_year + ActiveDateRange::DateRange.next_year).one_year?
+  end
 end
