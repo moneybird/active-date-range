@@ -5,3 +5,5 @@ require "active_date_range"
 require "active_support"
 
 require "minitest/autorun"
+
+Time.zone = 'UTC'
