@@ -38,6 +38,15 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 12.months.from_now.to_date.all_year, ActiveDateRange::DateRange.next_year
   end
 
+  def test_addition
+    a = ActiveDateRange::DateRange.new(Date.new(2021, 1, 1)..Date.new(2021, 1, 31))
+    b = ActiveDateRange::DateRange.new(Date.new(2021, 2, 1)..Date.new(2021, 2, 28))
+    c = ActiveDateRange::DateRange.new(Date.new(2021, 3, 1)..Date.new(2021, 3, 31))
+    assert_equal Date.new(2021, 1, 1)..Date.new(2021, 2, 28), a + b
+
+    assert_raises(ActiveDateRange::InvalidAddition) { a + c }
+  end
+
   def test_one_methods
     assert ActiveDateRange::DateRange.this_month.one_month?
     assert ActiveDateRange::DateRange.this_quarter.one_quarter?

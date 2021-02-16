@@ -10,9 +10,9 @@ require "active_date_range/date_range"
 
 module ActiveDateRange
   class Error < StandardError; end
-
   class InvalidDateRange < StandardError; end
-  # Your code goes here...
+  class InvalidAddition < StandardError; end
+
 
   def initialize(start_date, end_date)
     DateRange.new(start_date, end_date)
