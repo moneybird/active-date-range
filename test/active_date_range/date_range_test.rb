@@ -114,4 +114,23 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal :quarter, ActiveDateRange::DateRange.this_quarter.granularity
     assert_equal :year, ActiveDateRange::DateRange.this_year.granularity
   end
+
+  def test_days
+    assert_equal 1, ActiveDateRange::DateRange.parse("20210101..20210101").days
+    assert_equal 31, ActiveDateRange::DateRange.parse("202101..202101").days
+    assert_equal 365, ActiveDateRange::DateRange.parse("202101..202112").days
+  end
+
+  def test_to_param
+    assert_equal "202001..202001", ActiveDateRange::DateRange.parse("202001..202001").to_param
+    assert_equal "202001..202012", ActiveDateRange::DateRange.parse("202001..202012").to_param
+    assert_equal "20200101..20201210", ActiveDateRange::DateRange.parse("20200101..20201210").to_param
+
+    %w[
+      this_month previous_month next_month this_quarter previous_quarter next_quarter
+      this_year previous_year next_year
+    ].each do |relative|
+      assert_equal relative, ActiveDateRange::DateRange.parse(relative).to_param(relative: true)
+    end
+  end
 end

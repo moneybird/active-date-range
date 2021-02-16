@@ -68,6 +68,10 @@ module ActiveDateRange
       DateRange.new(self.begin, other.end)
     end
 
+    def days
+      @days ||= (self.end - self.begin).to_i + 1
+    end
+
     def one_month?
       self.begin == self.begin.at_beginning_of_month && self.end == self.begin.at_end_of_month
     end
@@ -99,6 +103,20 @@ module ActiveDateRange
         :quarter
       elsif one_month?
         :month
+      end
+    end
+
+    def relative_param
+      @relative_param ||= SHORTHANDS.find { |key, range| self == range.call }&.first&.to_s
+    end
+
+    def to_param(relative: false)
+      if relative && relative_param
+        relative_param
+      elsif full_month?
+        "#{self.begin.strftime('%Y%m')}..#{self.end.strftime('%Y%m')}"
+      else
+        "#{self.begin.strftime('%Y%m%d')}..#{self.end.strftime('%Y%m%d')}"
       end
     end
   end
