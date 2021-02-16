@@ -6,3 +6,5 @@ gemspec
 gem "rake", "~> 12.0"
 gem "railties", "~> 6.1"
 gem "minitest", "~> 5.0"
+gem "guard"
+gem "guard-minitest"
