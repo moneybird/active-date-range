@@ -27,14 +27,14 @@ module ActiveDateRange
       return SHORTHANDS[input.to_sym].call if SHORTHANDS.key?(input.to_sym)
 
       begin_date, end_date = input.split("..")
-      raise InvalidDateRangeFormat unless begin_date && end_date
+      raise InvalidDateRangeFormat, "#{input} doesn't have a begin..end format" unless begin_date && end_date
 
       DateRange.new(parse_date(begin_date), parse_date(end_date, last: true))
     end
 
     def self.parse_date(input, last: false)
       match_data = input.match(RANGE_PART_REGEXP)
-      raise InvalidDateRangeFormat unless match_data
+      raise InvalidDateRangeFormat, "#{input} isn't a valid date format YYYYMMDD or YYYYMM" unless match_data
 
       date = Date.new(
         match_data[:year].to_i,
