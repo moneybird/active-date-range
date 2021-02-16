@@ -23,7 +23,6 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
 
   def test_initialize_end_before_start
     assert_raises(ActiveDateRange::InvalidDateRange) { ActiveDateRange::DateRange.new(Date.new(2021, 12, 31), Date.new(2021, 1, 1)) }
-    assert_raises(ActiveDateRange::InvalidDateRange) { ActiveDateRange::DateRange.new(Date.new(2021, 1, 1), Date.new(2021, 1, 1)) }
   end
 
   def test_shorthands
@@ -36,6 +35,30 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal Date.today.all_year, ActiveDateRange::DateRange.this_year
     assert_equal 12.months.ago.to_date.all_year, ActiveDateRange::DateRange.previous_year
     assert_equal 12.months.from_now.to_date.all_year, ActiveDateRange::DateRange.next_year
+  end
+
+  def test_parse
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31)), ActiveDateRange::DateRange.parse(Date.new(2021, 1, 1)..Date.new(2021, 12, 31))
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31)), ActiveDateRange::DateRange.parse(Date.new(2021, 1, 1)..Date.new(2021, 12, 31))
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2013, 5, 1), Date.new(2013, 9, 1).at_end_of_month), ActiveDateRange::DateRange.parse("201305..201309")
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2013, 5, 1), Date.new(2013, 9, 1).at_end_of_month), ActiveDateRange::DateRange.parse("2013-05..2013-09")
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2014, 4, 15), Date.new(2014, 5, 23)), ActiveDateRange::DateRange.parse("20140415..20140523")
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2014, 4, 15), Date.new(2014, 5, 31)), ActiveDateRange::DateRange.parse("20140415..201405")
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2016, 5, 23), Date.new(2016, 5, 23)), ActiveDateRange::DateRange.parse("2016-05-23..2016-05-23")
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2014, 4, 1), Date.new(2014, 5, 15)), ActiveDateRange::DateRange.parse("201404..20140515")
+    assert_equal ActiveDateRange::DateRange.new(Date.new(2014, 4, 1), Date.new(2014, 5, 15)), ActiveDateRange::DateRange.parse("2014-04..2014-05-15")
+    assert_equal ActiveDateRange::DateRange.this_month, ActiveDateRange::DateRange.parse("this_month")
+    assert_equal ActiveDateRange::DateRange.previous_month, ActiveDateRange::DateRange.parse("previous_month")
+    assert_equal ActiveDateRange::DateRange.next_month, ActiveDateRange::DateRange.parse("next_month")
+    assert_equal ActiveDateRange::DateRange.this_quarter, ActiveDateRange::DateRange.parse("this_quarter")
+    assert_equal ActiveDateRange::DateRange.previous_quarter, ActiveDateRange::DateRange.parse("previous_quarter")
+    assert_equal ActiveDateRange::DateRange.next_quarter, ActiveDateRange::DateRange.parse("next_quarter")
+    assert_equal ActiveDateRange::DateRange.this_year, ActiveDateRange::DateRange.parse("this_year")
+    assert_equal ActiveDateRange::DateRange.previous_year, ActiveDateRange::DateRange.parse("previous_year")
+    assert_equal ActiveDateRange::DateRange.next_year, ActiveDateRange::DateRange.parse("next_year")
+    %w[2012..2013 2013011..2013051 foobar month 20-1301..20-1305 20160925..20160931].each do |format|
+      assert_raises(ActiveDateRange::InvalidDateRangeFormat) { ActiveDateRange::DateRange.parse(format) }
+    end
   end
 
   def test_addition

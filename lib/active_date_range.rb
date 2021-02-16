@@ -12,6 +12,7 @@ module ActiveDateRange
   class Error < StandardError; end
   class InvalidDateRange < StandardError; end
   class InvalidAddition < StandardError; end
+  class InvalidDateRangeFormat < StandardError; end
 
 
   def initialize(start_date, end_date)
