@@ -65,4 +65,21 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_not (ActiveDateRange::DateRange.this_quarter + ActiveDateRange::DateRange.next_quarter).one_quarter?
     assert_not (ActiveDateRange::DateRange.this_year + ActiveDateRange::DateRange.next_year).one_year?
   end
+
+  def test_full_methods
+    assert ActiveDateRange::DateRange.this_month.full_month?
+    assert ActiveDateRange::DateRange.this_quarter.full_month?
+    assert ActiveDateRange::DateRange.this_quarter.full_quarter?
+    assert ActiveDateRange::DateRange.this_year.full_month?
+    assert ActiveDateRange::DateRange.this_year.full_quarter?
+    assert ActiveDateRange::DateRange.this_year.full_year?
+
+    assert ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2020, 9, 30)).full_month?
+    assert ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2020, 9, 30)).full_quarter?
+    assert ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2021, 12, 31)).full_year?
+
+    assert_not ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2020, 9, 29)).full_month?
+    assert_not ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2020, 9, 29)).full_quarter?
+    assert_not ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2020, 12, 30)).full_year?
+  end
 end

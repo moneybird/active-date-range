@@ -49,5 +49,17 @@ module ActiveDateRange
     def one_year?
       self.begin == self.begin.at_beginning_of_year && self.end == self.begin.at_end_of_year
     end
+
+    def full_month?
+      self.begin == self.begin.at_beginning_of_month && self.end == self.end.at_end_of_month
+    end
+
+    def full_quarter?
+      self.begin == self.begin.at_beginning_of_quarter && self.end == self.end.at_end_of_quarter
+    end
+
+    def full_year?
+      self.begin == self.begin.at_beginning_of_year && self.end == self.end.at_end_of_year
+    end
   end
 end
