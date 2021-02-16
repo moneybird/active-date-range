@@ -82,4 +82,10 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_not ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2020, 9, 29)).full_quarter?
     assert_not ActiveDateRange::DateRange.new(Date.new(2020, 1, 1), Date.new(2020, 12, 30)).full_year?
   end
+
+  def test_granularity
+    assert_equal :month, ActiveDateRange::DateRange.this_month.granularity
+    assert_equal :quarter, ActiveDateRange::DateRange.this_quarter.granularity
+    assert_equal :year, ActiveDateRange::DateRange.this_year.granularity
+  end
 end

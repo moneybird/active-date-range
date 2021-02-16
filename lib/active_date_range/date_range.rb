@@ -61,5 +61,15 @@ module ActiveDateRange
     def full_year?
       self.begin == self.begin.at_beginning_of_year && self.end == self.end.at_end_of_year
     end
+
+    def granularity
+      if one_year?
+        :year
+      elsif one_quarter?
+        :quarter
+      elsif one_month?
+        :month
+      end
+    end
   end
 end
