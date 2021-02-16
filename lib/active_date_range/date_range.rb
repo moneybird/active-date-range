@@ -14,7 +14,7 @@ module ActiveDateRange
       next_year: -> { DateRange.new(12.months.from_now.to_date.all_year) }
     }.freeze
 
-    RANGE_PART_REGEXP = %r{\A(?<year>((1\d|2\d)\d\d))-?(?<month>0[1-9]|1[12])-?(?<day>[0-2]\d|3[01])?\z}
+    RANGE_PART_REGEXP = %r{\A(?<year>((1\d|2\d)\d\d))-?(?<month>0[1-9]|1[012])-?(?<day>[0-2]\d|3[01])?\z}
 
     class << self
       SHORTHANDS.each do |method, range|

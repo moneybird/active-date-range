@@ -56,6 +56,9 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal ActiveDateRange::DateRange.this_year, ActiveDateRange::DateRange.parse("this_year")
     assert_equal ActiveDateRange::DateRange.previous_year, ActiveDateRange::DateRange.parse("previous_year")
     assert_equal ActiveDateRange::DateRange.next_year, ActiveDateRange::DateRange.parse("next_year")
+    (Date.new(2021, 1, 1)..Date.new(2021, 12, 31)).to_a.each do |date|
+      assert_equal ActiveDateRange::DateRange.new(date, date), ActiveDateRange::DateRange.parse("#{date.strftime("%Y%m%d")}..#{date.strftime("%Y%m%d")}")
+    end
     %w[2012..2013 2013011..2013051 foobar month 20-1301..20-1305 20160925..20160931].each do |format|
       assert_raises(ActiveDateRange::InvalidDateRangeFormat) { ActiveDateRange::DateRange.parse(format) }
     end
