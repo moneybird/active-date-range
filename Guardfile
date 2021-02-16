@@ -15,6 +15,8 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
+clearing :on
+
 guard :minitest do
   # with Minitest::Unit
   watch(%r{^test/(.*)\/?test_(.*)\.rb$})
