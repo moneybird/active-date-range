@@ -113,10 +113,9 @@ module ActiveDateRange
     def to_param(relative: false)
       if relative && relative_param
         relative_param
-      elsif full_month?
-        "#{self.begin.strftime('%Y%m')}..#{self.end.strftime('%Y%m')}"
       else
-        "#{self.begin.strftime('%Y%m%d')}..#{self.end.strftime('%Y%m%d')}"
+        format = full_month? ? "%Y%m" : "%Y%m%d"
+        "#{self.begin.strftime(format)}..#{self.end.strftime(format)}"
       end
     end
   end
