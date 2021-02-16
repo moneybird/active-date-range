@@ -118,5 +118,13 @@ module ActiveDateRange
         "#{self.begin.strftime(format)}..#{self.end.strftime(format)}"
       end
     end
+
+    def to_datetime_range
+      Range.new(self.begin.to_datetime.at_beginning_of_day, self.end.to_datetime.at_end_of_day)
+    end
+
+    def to_s
+      "#{self.begin.strftime('%Y%m%d')}..#{self.end.strftime('%Y%m%d')}"
+    end
   end
 end

@@ -133,4 +133,8 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
       assert_equal relative, ActiveDateRange::DateRange.parse(relative).to_param(relative: true)
     end
   end
+
+  def test_to_datetime_range
+    assert_equal DateTime.new(2021, 1, 1)..DateTime.new(2021, 12, 31).at_end_of_day, ActiveDateRange::DateRange.parse("202101..202112").to_datetime_range
+  end
 end
