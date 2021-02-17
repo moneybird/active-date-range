@@ -114,6 +114,10 @@ module ActiveDateRange
       self.begin == self.begin.at_beginning_of_year && self.end == self.end.at_end_of_year
     end
 
+    def same_year?
+      self.begin.year == self.end.year
+    end
+
     def granularity
       if one_year?
         :year

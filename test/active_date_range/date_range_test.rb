@@ -125,6 +125,11 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 365, described_class.parse("202101..202112").days
   end
 
+  def test_same_year
+    assert described_class.parse("202001..202012").same_year?
+    assert_not described_class.parse("202001..202112").same_year?
+  end
+
   def test_to_param
     assert_equal "202001..202001", described_class.parse("202001..202001").to_param
     assert_equal "202001..202012", described_class.parse("202001..202012").to_param
