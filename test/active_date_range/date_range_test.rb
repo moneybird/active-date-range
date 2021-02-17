@@ -138,6 +138,18 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal DateTime.new(2021, 1, 1)..DateTime.new(2021, 12, 31).at_end_of_day, ActiveDateRange::DateRange.parse("202101..202112").to_datetime_range
   end
 
+  def test_previous
+    assert_equal ActiveDateRange::DateRange.prev_month, ActiveDateRange::DateRange.this_month.previous
+    assert_equal ActiveDateRange::DateRange.prev_quarter, ActiveDateRange::DateRange.this_quarter.previous
+    assert_equal ActiveDateRange::DateRange.prev_year, ActiveDateRange::DateRange.this_year.previous
+    assert_equal ActiveDateRange::DateRange.parse("201204..201302"), ActiveDateRange::DateRange.parse("201303..201401").previous
+    assert_equal ActiveDateRange::DateRange.parse("201303..201401").months, ActiveDateRange::DateRange.parse("201303..201401").previous.months
+    assert_equal ActiveDateRange::DateRange.parse("201201..201312"), ActiveDateRange::DateRange.parse("201401..201406").previous(periods: 4)
+    assert_equal 4 * ActiveDateRange::DateRange.parse("201401..201406").months, ActiveDateRange::DateRange.parse("201401..201406").previous(periods: 4).months
+    assert_equal ActiveDateRange::DateRange.parse("201304..201406"), ActiveDateRange::DateRange.parse("201407..201509").previous
+    assert_equal ActiveDateRange::DateRange.parse("201407..201509").months, ActiveDateRange::DateRange.parse("201407..201509").previous.months
+  end
+
   def test_in_groups_of
     assert_raises(ActiveDateRange::UnknownGranularity) { ActiveDateRange::DateRange.this_year.in_groups_of(:halve_year) }
     assert_equal(

@@ -145,6 +145,16 @@ module ActiveDateRange
       "#{self.begin.strftime('%Y%m%d')}..#{self.end.strftime('%Y%m%d')}"
     end
 
+    def previous(periods: 1)
+      if granularity
+        DateRange.new(self.begin - periods.send(granularity), self.begin - 1.day)
+      elsif full_month?
+        DateRange.new(in_groups_of(:month).first.previous(periods: periods * months).begin, self.begin - 1.day)
+      else
+        DateRange.new((self.begin - (periods * days).days).at_beginning_of_month, self.begin - 1.day)
+      end
+    end
+
     def in_groups_of(granularity, amount: 1)
       raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
 
