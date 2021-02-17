@@ -133,7 +133,11 @@ module ActiveDateRange
     end
 
     def relative_param
-      @relative_param ||= SHORTHANDS.find { |key, range| self == range.call }&.first&.to_s
+      @relative_param ||= SHORTHANDS
+        .select { |key, _| key.end_with?(granularity.to_s) }
+        .find { |key, range| self == range.call }
+        &.first
+        &.to_s
     end
 
     def to_param(relative: false)
