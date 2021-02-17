@@ -72,6 +72,24 @@ module ActiveDateRange
       @days ||= (self.end - self.begin).to_i + 1
     end
 
+    def months
+      return nil unless full_month?
+
+      ((self.end.year - self.begin.year) * 12) + (self.end.month - self.begin.month + 1)
+    end
+
+    def quarters
+      return nil unless full_quarter?
+
+      months / 3
+    end
+
+    def years
+      return nil unless full_year?
+
+      months / 12
+    end
+
     def one_month?
       self.begin == self.begin.at_beginning_of_month && self.end == self.begin.at_end_of_month
     end

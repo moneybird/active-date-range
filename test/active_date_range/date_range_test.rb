@@ -239,4 +239,38 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
       ActiveDateRange::DateRange.parse("202005..202112").in_groups_of(:year)
     )
   end
+
+  def test_months
+    assert_equal 1, ActiveDateRange::DateRange.parse("202101..202101").months
+    assert_equal 2, ActiveDateRange::DateRange.parse("202101..202102").months
+    assert_equal 3, ActiveDateRange::DateRange.parse("202101..202103").months
+    assert_equal 4, ActiveDateRange::DateRange.parse("202101..202104").months
+    assert_equal 5, ActiveDateRange::DateRange.parse("202101..202105").months
+    assert_equal 6, ActiveDateRange::DateRange.parse("202101..202106").months
+    assert_equal 7, ActiveDateRange::DateRange.parse("202101..202107").months
+    assert_equal 8, ActiveDateRange::DateRange.parse("202101..202108").months
+    assert_equal 9, ActiveDateRange::DateRange.parse("202101..202109").months
+    assert_equal 10, ActiveDateRange::DateRange.parse("202101..202110").months
+    assert_equal 11, ActiveDateRange::DateRange.parse("202101..202111").months
+    assert_equal 12, ActiveDateRange::DateRange.parse("202101..202112").months
+    assert_equal 13, ActiveDateRange::DateRange.parse("202101..202201").months
+    assert_equal 26, ActiveDateRange::DateRange.parse("202101..202302").months
+    assert_equal 44, ActiveDateRange::DateRange.parse("202101..202408").months
+    assert_equal 51, ActiveDateRange::DateRange.parse("202107..202509").months
+    assert_nil ActiveDateRange::DateRange.parse("20210101..20210215").months
+  end
+
+  def test_quarters
+    assert_equal 1, ActiveDateRange::DateRange.parse("202101..202103").quarters
+    assert_equal 2, ActiveDateRange::DateRange.parse("202101..202106").quarters
+    assert_equal 3, ActiveDateRange::DateRange.parse("202101..202109").quarters
+    assert_equal 4, ActiveDateRange::DateRange.parse("202101..202112").quarters
+    assert_nil ActiveDateRange::DateRange.parse("202101..202111").quarters
+  end
+
+  def test_years
+    assert_equal 1, ActiveDateRange::DateRange.parse("202101..202112").years
+    assert_equal 2, ActiveDateRange::DateRange.parse("202101..202212").years
+    assert_nil ActiveDateRange::DateRange.parse("202101..202111").years
+  end
 end
