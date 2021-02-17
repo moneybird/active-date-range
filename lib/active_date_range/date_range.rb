@@ -4,13 +4,13 @@ module ActiveDateRange
   class DateRange < Range
     SHORTHANDS = {
       this_month: -> { DateRange.new(Time.zone.today.all_month) },
-      previous_month: -> { DateRange.new(1.month.ago.to_date.all_month) },
+      prev_month: -> { DateRange.new(1.month.ago.to_date.all_month) },
       next_month: -> { DateRange.new(1.month.from_now.to_date.all_month) },
       this_quarter: -> { DateRange.new(Time.zone.today.all_quarter) },
-      previous_quarter: -> { DateRange.new(3.months.ago.to_date.all_quarter) },
+      prev_quarter: -> { DateRange.new(3.months.ago.to_date.all_quarter) },
       next_quarter: -> { DateRange.new(3.months.from_now.to_date.all_quarter) },
       this_year: -> { DateRange.new(Time.zone.today.all_year) },
-      previous_year: -> { DateRange.new(12.months.ago.to_date.all_year) },
+      prev_year: -> { DateRange.new(12.months.ago.to_date.all_year) },
       next_year: -> { DateRange.new(12.months.from_now.to_date.all_year) }
     }.freeze
 
