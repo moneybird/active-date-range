@@ -4,6 +4,7 @@
 require "active_support/core_ext/time"
 require "active_support/core_ext/date"
 require "active_support/core_ext/integer"
+require "active_date_range/core_ext/integer"
 
 require "active_date_range/version"
 require "active_date_range/date_range"
@@ -13,6 +14,7 @@ module ActiveDateRange
   class InvalidDateRange < StandardError; end
   class InvalidAddition < StandardError; end
   class InvalidDateRangeFormat < StandardError; end
+  class UnknownGranularity < StandardError; end
 
 
   def initialize(start_date, end_date)

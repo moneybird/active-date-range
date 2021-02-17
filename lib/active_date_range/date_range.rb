@@ -126,5 +126,28 @@ module ActiveDateRange
     def to_s
       "#{self.begin.strftime('%Y%m%d')}..#{self.end.strftime('%Y%m%d')}"
     end
+
+    def in_groups_of(granularity, amount: 1)
+      raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
+
+      [].tap do |groups|
+        current_date = self.begin
+        while current_date <= self.end
+          end_date = amount == 1 ? current_date : (current_date + amount.send(granularity) - 1.day)
+          groups << DateRange.new(
+            current_date.send("at_beginning_of_#{granularity}"),
+            end_date.send("at_end_of_#{granularity}")
+          )
+          current_date += amount.send(granularity)
+        end
+
+        groups[0] = DateRange.new(self.begin, groups.first.end) if groups.first.begin != self.begin
+        if groups.last.end > self.end
+          groups[groups.length - 1] = DateRange.new(groups.last.begin, self.end)
+        elsif groups.last.end < self.end
+          groups << DateRange.new(self.end.send("at_beginning_of_#{granularity}"), self.end)
+        end
+      end
+    end
   end
 end

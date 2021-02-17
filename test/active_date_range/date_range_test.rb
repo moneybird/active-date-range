@@ -137,4 +137,106 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
   def test_to_datetime_range
     assert_equal DateTime.new(2021, 1, 1)..DateTime.new(2021, 12, 31).at_end_of_day, ActiveDateRange::DateRange.parse("202101..202112").to_datetime_range
   end
+
+  def test_in_groups_of
+    assert_raises(ActiveDateRange::UnknownGranularity) { ActiveDateRange::DateRange.this_year.in_groups_of(:halve_year) }
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202101"),
+        ActiveDateRange::DateRange.parse("202102..202102"),
+        ActiveDateRange::DateRange.parse("202103..202103"),
+        ActiveDateRange::DateRange.parse("202104..202104"),
+        ActiveDateRange::DateRange.parse("202105..202105"),
+        ActiveDateRange::DateRange.parse("202106..202106"),
+        ActiveDateRange::DateRange.parse("202107..202107"),
+        ActiveDateRange::DateRange.parse("202108..202108"),
+        ActiveDateRange::DateRange.parse("202109..202109"),
+        ActiveDateRange::DateRange.parse("202110..202110"),
+        ActiveDateRange::DateRange.parse("202111..202111"),
+        ActiveDateRange::DateRange.parse("202112..202112")
+      ],
+      ActiveDateRange::DateRange.parse("202101..202112").in_groups_of(:month)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202101"),
+        ActiveDateRange::DateRange.parse("202102..202102"),
+        ActiveDateRange::DateRange.parse("202103..202103"),
+        ActiveDateRange::DateRange.parse("202104..202104"),
+        ActiveDateRange::DateRange.parse("202105..202105"),
+        ActiveDateRange::DateRange.parse("202106..202106")
+      ],
+      ActiveDateRange::DateRange.parse("202101..202106").in_groups_of(:month)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202101"),
+        ActiveDateRange::DateRange.parse("202102..202102"),
+        ActiveDateRange::DateRange.parse("202103..202103")
+      ],
+      ActiveDateRange::DateRange.parse("202101..202103").in_groups_of(:month)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202101"),
+      ],
+      ActiveDateRange::DateRange.parse("202101..202101").in_groups_of(:month)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("20200115..20200131"),
+        ActiveDateRange::DateRange.parse("202002..202002"),
+        ActiveDateRange::DateRange.parse("20200301..20200315"),
+      ],
+      ActiveDateRange::DateRange.parse("20200115..20200315").in_groups_of(:month)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("201201..201206"),
+        ActiveDateRange::DateRange.parse("201207..201212"),
+        ActiveDateRange::DateRange.parse("201301..201306"),
+        ActiveDateRange::DateRange.parse("201307..201312"),
+        ActiveDateRange::DateRange.parse("201401..201406")
+      ],
+      ActiveDateRange::DateRange.parse("201201..201406").in_groups_of(:month, amount: 6)
+    )
+
+
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202103"),
+        ActiveDateRange::DateRange.parse("202104..202106"),
+        ActiveDateRange::DateRange.parse("202107..202109"),
+        ActiveDateRange::DateRange.parse("202110..202112")
+      ],
+      ActiveDateRange::DateRange.parse("202101..202112").in_groups_of(:quarter)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202103"),
+      ],
+      ActiveDateRange::DateRange.parse("202101..202103").in_groups_of(:quarter)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202101"),
+      ],
+      ActiveDateRange::DateRange.parse("202101..202101").in_groups_of(:quarter)
+    )
+
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202101..202112"),
+        ActiveDateRange::DateRange.parse("202201..202212")
+      ],
+      ActiveDateRange::DateRange.parse("202101..202212").in_groups_of(:year)
+    )
+    assert_equal(
+      [
+        ActiveDateRange::DateRange.parse("202005..202012"),
+        ActiveDateRange::DateRange.parse("202101..202112")
+      ],
+      ActiveDateRange::DateRange.parse("202005..202112").in_groups_of(:year)
+    )
+  end
 end
