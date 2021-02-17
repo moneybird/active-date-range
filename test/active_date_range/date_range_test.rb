@@ -77,6 +77,12 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_raises(ActiveDateRange::InvalidAddition) { a + c }
   end
 
+  def test_sort
+    a = described_class.parse('202001..202001')
+    b = described_class.parse('202002..202002')
+    assert_equal([a, b], [b, a].sort)
+  end
+
   def test_one_methods
     assert described_class.this_month.one_month?
     assert described_class.this_quarter.one_quarter?

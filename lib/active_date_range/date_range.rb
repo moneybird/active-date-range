@@ -68,6 +68,10 @@ module ActiveDateRange
       DateRange.new(self.begin, other.end)
     end
 
+    def <=>(other)
+      self.begin <=> other.begin
+    end
+
     def days
       @days ||= (self.end - self.begin).to_i + 1
     end
