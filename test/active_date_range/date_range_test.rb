@@ -3,6 +3,10 @@
 require "test_helper"
 
 class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
+  def described_class
+    ActiveDateRange::DateRange
+  end
+
   def test_initialize
     range = ActiveDateRange::DateRange.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31))
     assert_kind_of ActiveDateRange::DateRange, range
@@ -148,6 +152,19 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 4 * ActiveDateRange::DateRange.parse("201401..201406").months, ActiveDateRange::DateRange.parse("201401..201406").previous(periods: 4).months
     assert_equal ActiveDateRange::DateRange.parse("201304..201406"), ActiveDateRange::DateRange.parse("201407..201509").previous
     assert_equal ActiveDateRange::DateRange.parse("201407..201509").months, ActiveDateRange::DateRange.parse("201407..201509").previous.months
+  end
+
+  def test_next
+    assert_equal described_class.parse("201302..201302"), described_class.parse("201301..201301").next
+    assert_equal described_class.parse("201407..201407"), described_class.parse("201406..201406").next
+    assert_equal described_class.parse("201408..201408"), described_class.parse("201407..201407").next
+    assert_equal described_class.parse("201409..201409"), described_class.parse("201408..201408").next
+    assert_equal described_class.parse("201407..201410"), described_class.parse("201406..201406").next(periods: 4)
+    assert_equal described_class.parse("201304..201306"), described_class.parse("201301..201303").next
+    assert_equal described_class.parse("201401..201412"), described_class.parse("201301..201312").next
+    assert_equal described_class.parse("201403..201502"), described_class.parse("201303..201402").next
+    assert_equal described_class.parse("201510..201612"), described_class.parse("201407..201509").next
+    assert_equal described_class.parse("201407..201509").months, described_class.parse("201407..201509").next.months
   end
 
   def test_in_groups_of

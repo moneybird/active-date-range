@@ -155,6 +155,14 @@ module ActiveDateRange
       end
     end
 
+    def next(periods: 1)
+      if granularity
+        DateRange.new(self.end + 1.day, (self.end + periods.send(granularity)).at_end_of_month)
+      else
+        DateRange.new(self.end + 1.day, (self.end + days.days).at_end_of_month)
+      end
+    end
+
     def in_groups_of(granularity, amount: 1)
       raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
 
