@@ -17,9 +17,4 @@ module ActiveDateRange
   class InvalidAddition < StandardError; end
   class InvalidDateRangeFormat < StandardError; end
   class UnknownGranularity < StandardError; end
-
-
-  def initialize(start_date, end_date)
-    DateRange.new(start_date, end_date)
-  end
 end
