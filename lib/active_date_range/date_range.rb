@@ -108,17 +108,20 @@ module ActiveDateRange
 
     def one_month?
       (28..31).cover?(days) &&
-        begin_at_beginning_of_month? && self.end == self.begin.at_end_of_month
+        begin_at_beginning_of_month? &&
+        self.end == self.begin.at_end_of_month
     end
 
     def one_quarter?
       (90..92).cover?(days) &&
-        begin_at_beginning_of_quarter? && self.end == self.begin.at_end_of_quarter
+        begin_at_beginning_of_quarter? &&
+        self.end == self.begin.at_end_of_quarter
     end
 
     def one_year?
       (365..366).cover?(days) &&
-        begin_at_beginning_of_year? && self.end == self.begin.at_end_of_year
+        begin_at_beginning_of_year? &&
+        self.end == self.begin.at_end_of_year
     end
 
     def full_month?
