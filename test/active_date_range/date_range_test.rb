@@ -78,9 +78,34 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
   end
 
   def test_sort
-    a = described_class.parse('202001..202001')
-    b = described_class.parse('202002..202002')
+    a = described_class.parse("202001..202001")
+    b = described_class.parse("202002..202002")
     assert_equal([a, b], [b, a].sort)
+  end
+
+  def test_begin_at_beginning_of_month
+    assert described_class.parse("202001..202001").begin_at_beginning_of_month?
+    assert_not described_class.parse("20200102..20200102").begin_at_beginning_of_month?
+  end
+
+  def test_begin_at_beginning_of_quarter
+    assert described_class.parse("202001..202001").begin_at_beginning_of_quarter?
+    assert described_class.parse("202004..202006").begin_at_beginning_of_quarter?
+    assert described_class.parse("202007..202009").begin_at_beginning_of_quarter?
+    assert described_class.parse("202010..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202002..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202003..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202005..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202006..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202008..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202009..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202011..202012").begin_at_beginning_of_quarter?
+    assert_not described_class.parse("202012..202012").begin_at_beginning_of_quarter?
+  end
+
+  def test_begin_at_beginning_of_year
+    assert described_class.parse("202001..202001").begin_at_beginning_of_year?
+    assert_not described_class.parse("202002..202002").begin_at_beginning_of_year?
   end
 
   def test_one_methods

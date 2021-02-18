@@ -94,31 +94,43 @@ module ActiveDateRange
       months / 12
     end
 
+    def begin_at_beginning_of_month?
+      self.begin.day == 1
+    end
+
+    def begin_at_beginning_of_quarter?
+      begin_at_beginning_of_month? && [1, 4, 7, 10].include?(self.begin.month)
+    end
+
+    def begin_at_beginning_of_year?
+      begin_at_beginning_of_month? && self.begin.month == 1
+    end
+
     def one_month?
       (28..31).cover?(days) &&
-        self.begin == self.begin.at_beginning_of_month && self.end == self.begin.at_end_of_month
+        begin_at_beginning_of_month? && self.end == self.begin.at_end_of_month
     end
 
     def one_quarter?
       (90..92).cover?(days) &&
-        self.begin == self.begin.at_beginning_of_quarter && self.end == self.begin.at_end_of_quarter
+        begin_at_beginning_of_quarter? && self.end == self.begin.at_end_of_quarter
     end
 
     def one_year?
       (365..366).cover?(days) &&
-        self.begin == self.begin.at_beginning_of_year && self.end == self.begin.at_end_of_year
+        begin_at_beginning_of_year? && self.end == self.begin.at_end_of_year
     end
 
     def full_month?
-      self.begin == self.begin.at_beginning_of_month && self.end == self.end.at_end_of_month
+      begin_at_beginning_of_month? && self.end == self.end.at_end_of_month
     end
 
     def full_quarter?
-      self.begin == self.begin.at_beginning_of_quarter && self.end == self.end.at_end_of_quarter
+      begin_at_beginning_of_quarter? && self.end == self.end.at_end_of_quarter
     end
 
     def full_year?
-      self.begin == self.begin.at_beginning_of_year && self.end == self.end.at_end_of_year
+      begin_at_beginning_of_year? && self.end == self.end.at_end_of_year
     end
 
     def same_year?
