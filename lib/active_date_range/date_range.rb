@@ -215,5 +215,9 @@ module ActiveDateRange
         end
       end
     end
+
+    def humanize(format:)
+      Humanizer.new(self, format: format).humanize
+    end
   end
 end
