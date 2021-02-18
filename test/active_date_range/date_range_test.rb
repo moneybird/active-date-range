@@ -88,6 +88,15 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert described_class.this_quarter.one_quarter?
     assert described_class.this_year.one_year?
 
+    assert described_class.parse("202001..202003").one_quarter?
+    assert described_class.parse("202101..202103").one_quarter?
+    assert described_class.parse("202104..202106").one_quarter?
+    assert described_class.parse("202107..202109").one_quarter?
+    assert described_class.parse("202110..202112").one_quarter?
+
+    assert described_class.parse("202001..202012").one_year?
+    assert described_class.parse("202101..202112").one_year?
+
     assert_not described_class.this_month.one_quarter?
     assert_not described_class.this_month.one_year?
 
