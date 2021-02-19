@@ -9,6 +9,7 @@ require "active_date_range/core_ext/date"
 
 require "active_date_range/version"
 require "active_date_range/date_range"
+require "active_date_range/i18n"
 require "active_date_range/humanizer"
 
 module ActiveDateRange
