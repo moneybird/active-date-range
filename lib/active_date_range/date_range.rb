@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ActiveDateRange
-  # Provides a DateRange with parsing, calculations and query methods
+  # Provides a <tt>DateRange</tt> with parsing, calculations and query methods
   class DateRange < Range
     SHORTHANDS = {
       this_month: -> { DateRange.new(Time.zone.today.all_month) },
@@ -23,10 +23,10 @@ module ActiveDateRange
       end
     end
 
-    # Parses a date range string to a DateRange instance. Valid formats are:
-    # - A relative shorthand: this_month, prev_month, next_month, etc.
-    # - A begin and end date: YYYYMMDD..YYYYMMDD
-    # - A begin and end month: YYYYMM..YYYYMM
+    # Parses a date range string to a <tt>DateRange</tt> instance. Valid formats are:
+    # - A relative shorthand: <tt>this_month</tt>, <tt>prev_month</tt>, <tt>next_month</tt>, etc.
+    # - A begin and end date: <tt>YYYYMMDD..YYYYMMDD</tt>
+    # - A begin and end month: <tt>YYYYMM..YYYYMM</tt>
     def self.parse(input)
       return DateRange.new(input) if input.kind_of?(Range)
       return SHORTHANDS[input.to_sym].call if SHORTHANDS.key?(input.to_sym)
@@ -163,8 +163,12 @@ module ActiveDateRange
       self.begin.year == self.end.year
     end
 
-    # Returns the granularity of the range. Returns either `:year`, `:quarter` or `:month`
-    # based on if the range has exactly this length.
+    # Returns the granularity of the range. Returns either <tt>:year</tt>, <tt>:quarter</tt> or
+    # <tt>:month</tt> based on if the range has exactly this length.
+    #
+    #   DateRange.this_month.granularity    # => :month
+    #   DateRange.this_quarter.granularity  # => :quarter
+    #   DateRange.this_year.granularity     # => :year
     def granularity
       if one_year?
         :year
@@ -192,6 +196,10 @@ module ActiveDateRange
     #
     # When `relative` is false, a `YYYYMMDD..YYYYMMDD` or `YYYYMM..YYYYMM` format is
     # returned. The output of `to_param` is compatible with the `parse` method.
+    #
+    #   DateRange.parse("202001..202001").to_param                  # => "202001..202001"
+    #   DateRange.parse("20200101..20200115").to_param              # => "20200101..20200115"
+    #   DateRange.parse("202001..202001").to_param(relative: true)  # => "this_month"
     def to_param(relative: false)
       if relative && relative_param
         relative_param
@@ -212,6 +220,9 @@ module ActiveDateRange
 
     # Returns the period previous to the current period. `periods` can be raised to return more
     # than 1 previous period.
+    #
+    #   DateRange.this_month.previous # => DateRange.prev_month
+    #   DateRange.this_month.previous(periods: 2) # => DateRange.prev_month.previous + DateRange.prev_month
     def previous(periods: 1)
       if granularity
         DateRange.new(self.begin - periods.send(granularity), self.begin - 1.day)
@@ -224,6 +235,9 @@ module ActiveDateRange
 
     # Returns the period next to the current period. `periods` can be raised to return more
     # than 1 next period.
+    #
+    #   DateRange.this_month.next # => DateRange.next_month
+    #   DateRange.this_month.next(periods: 2) # => DateRange.next_month + DateRange.next_month.next
     def next(periods: 1)
       if granularity
         DateRange.new(self.end + 1.day, (self.end + periods.send(granularity)).at_end_of_month)
@@ -239,6 +253,9 @@ module ActiveDateRange
     # Always returns full months/quarters/years, from the first to the last day of the period.
     # The first and last item in the array can have a partial month/quarter/year, depending on
     # the date range.
+    #
+    #   DateRange.parse("202101..202103").in_groups_of(:month) # => [DateRange.parse("202001..202001"), DateRange.parse("202002..202002"), DateRange.parse("202003..202003")]
+    #   DateRange.parse("202101..202106").in_groups_of(:month, amount: 2) # => [DateRange.parse("202001..202002"), DateRange.parse("202003..202004"), DateRange.parse("202005..202006")]
     def in_groups_of(granularity, amount: 1)
       raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
 
