@@ -26,7 +26,8 @@ module ActiveDateRange
   #   DateRange.parse("202101..202112").humanize # => "2021"
   #   DateRange.parse("202101..202212").humanize # => "2021 - 2021"
   #
-  # Translations and formats are completely customizable through <tt>I18n</tt>.
+  # Translations and formats are completely customizable through <tt>I18n</tt>, see
+  # <tt>locales/en.yml</tt> for an overview of translatable keys.
   class Humanizer
     attr_reader :date_range, :format
 
