@@ -24,12 +24,14 @@ class ActiveDateRangeHumanizerTest < ActiveSupport::TestCase
   def test_humanize_month
     assert_equal "Jan 2013", ActiveDateRange::Humanizer.new(range.parse("201301..201301")).humanize
     assert_equal "January 2013", ActiveDateRange::Humanizer.new(range.parse("201301..201301"), format: :long).humanize
+    assert_equal "Jan - Feb 2013", ActiveDateRange::Humanizer.new(range.parse("201301..201302")).humanize
   end
 
   def test_humanize_quarter
     assert_equal "Q1 2013", ActiveDateRange::Humanizer.new(range.parse("201301..201303")).humanize
     assert_equal "quarter 1 2013", ActiveDateRange::Humanizer.new(range.parse("201301..201303"), format: :long).humanize
     assert_equal "Q1 - Q2 2013", ActiveDateRange::Humanizer.new(range.parse("201301..201306")).humanize
+  assert_equal "Q1 2013 - Q2 2014", ActiveDateRange::Humanizer.new(range.parse("201301..201406")).humanize
     assert_equal "quarter 1 - quarter 2 2013", ActiveDateRange::Humanizer.new(range.parse("201301..201306"), format: :long).humanize
   end
 

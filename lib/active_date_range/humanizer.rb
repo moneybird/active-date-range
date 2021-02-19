@@ -3,6 +3,30 @@
 require "i18n"
 
 module ActiveDateRange
+  # Translates a <tt>DateRange</tt> to a human readable format. Localization and translations are
+  # handled by I18n.
+  #
+  # Valid <tt>format</tt> parameters:
+  # - <tt>short</tt> (default): Jan 1, 2021 - Jan 15, 2021
+  # - <tt>long</tt>: January 12, 2021 - January 15, 2021
+  # - <tt>relative</tt>: when available, returns a relative translation like "this month" or "next year".
+  # - <tt>explicit</tt>: never shortens a <tt>short</tt> or <tt>long</tt> format (see below)
+  #
+  # Unless you use the <tt>:explicit</tt> format, the translation is as short as possible:
+  #
+  #   DateRange.parse("20210101..20210101").humanize # => "Jan 1, 2021"
+  #   DateRange.parse("20210101..20210115").humanize # => "Jan 1 - Jan 15, 2021"
+  #   DateRange.parse("20210101..20220115").humanize # => "Jan 1 2021 - Jan 15, 2022"
+  #   DateRange.parse("202101..202101").humanize # => "Jan 2021"
+  #   DateRange.parse("202101..202102").humanize # => "Jan - Feb 2021"
+  #   DateRange.parse("202101..202202").humanize # => "Jan 2021 - Feb 2022"
+  #   DateRange.parse("202101..202103").humanize # => "Q1 2021"
+  #   DateRange.parse("202101..202106").humanize # => "Q1 - Q2 2021"
+  #   DateRange.parse("202101..202206").humanize # => "Q1 2021 - Q2 2022"
+  #   DateRange.parse("202101..202112").humanize # => "2021"
+  #   DateRange.parse("202101..202212").humanize # => "2021 - 2021"
+  #
+  # Translations and formats are completely customizable through <tt>I18n</tt>.
   class Humanizer
     attr_reader :date_range, :format
 
