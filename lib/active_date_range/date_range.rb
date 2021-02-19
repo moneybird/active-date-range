@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module ActiveDateRange
+  # Provides a DateRange with parsing, calculations and query methods
   class DateRange < Range
     SHORTHANDS = {
       this_month: -> { DateRange.new(Time.zone.today.all_month) },
@@ -22,6 +23,10 @@ module ActiveDateRange
       end
     end
 
+    # Parses a date range string to a DateRange instance. Valid formats are:
+    # - A relative shorthand: this_month, prev_month, next_month, etc.
+    # - A begin and end date: YYYYMMDD..YYYYMMDD
+    # - A begin and end month: YYYYMM..YYYYMM
     def self.parse(input)
       return DateRange.new(input) if input.kind_of?(Range)
       return SHORTHANDS[input.to_sym].call if SHORTHANDS.key?(input.to_sym)
@@ -50,6 +55,8 @@ module ActiveDateRange
 
     private_class_method :parse_date
 
+    # Initializes a new DateRange. Accepts both a begin and end date or a range of dates.
+    # Make sures the begin date is before the end date.
     def initialize(begin_date, end_date = nil)
       begin_date, end_date = begin_date.begin, begin_date.end if begin_date.kind_of?(Range)
       begin_date = begin_date.to_date if begin_date.kind_of?(Time)
@@ -62,84 +69,102 @@ module ActiveDateRange
       super(begin_date, end_date)
     end
 
+    # Adds two date ranges together. Fails when the ranges are not subsequent.
     def +(other)
       raise InvalidAddition if self.end != (other.begin - 1.day)
 
       DateRange.new(self.begin, other.end)
     end
 
+    # Sorts two date ranges by the begin date.
     def <=>(other)
       self.begin <=> other.begin
     end
 
+    # Returns the number of days in the range
     def days
       @days ||= (self.end - self.begin).to_i + 1
     end
 
+    # Returns the number of months in the range or nil when range is no full month
     def months
       return nil unless full_month?
 
       ((self.end.year - self.begin.year) * 12) + (self.end.month - self.begin.month + 1)
     end
 
+    # Returns the number of quarters in the range or nil when range is no full quarter
     def quarters
       return nil unless full_quarter?
 
       months / 3
     end
 
+    # Returns the number of years on the range or nil when range is no full year
     def years
       return nil unless full_year?
 
       months / 12
     end
 
+    # Returns true when begin of the range is at the beginning of the month
     def begin_at_beginning_of_month?
       self.begin.day == 1
     end
 
+    # Returns true when begin of the range is at the beginning of the quarter
     def begin_at_beginning_of_quarter?
       begin_at_beginning_of_month? && [1, 4, 7, 10].include?(self.begin.month)
     end
 
+    # Returns true when begin of the range is at the beginning of the year
     def begin_at_beginning_of_year?
       begin_at_beginning_of_month? && self.begin.month == 1
     end
 
+    # Returns true when the range is exactly one month long
     def one_month?
       (28..31).cover?(days) &&
         begin_at_beginning_of_month? &&
         self.end == self.begin.at_end_of_month
     end
 
+    # Returns true when the range is exactly one quarter long
     def one_quarter?
       (90..92).cover?(days) &&
         begin_at_beginning_of_quarter? &&
         self.end == self.begin.at_end_of_quarter
     end
 
+    # Returns true when the range is exactly one year long
     def one_year?
       (365..366).cover?(days) &&
         begin_at_beginning_of_year? &&
         self.end == self.begin.at_end_of_year
     end
 
+    # Returns true when the range is exactly one or more months long
     def full_month?
       begin_at_beginning_of_month? && self.end == self.end.at_end_of_month
     end
 
+    # Returns true when the range is exactly one or more quarters long
     def full_quarter?
       begin_at_beginning_of_quarter? && self.end == self.end.at_end_of_quarter
     end
 
+    # Returns true when the range is exactly one or more years long
     def full_year?
       begin_at_beginning_of_year? && self.end == self.end.at_end_of_year
     end
 
+    # Returns true when begin and end are in the same year
     def same_year?
       self.begin.year == self.end.year
     end
 
+    # Returns the granularity of the range. Returns either `:year`, `:quarter` or `:month`
+    # based on if the range has exactly this length.
     def granularity
       if one_year?
         :year
@@ -150,6 +175,9 @@ module ActiveDateRange
       end
     end
 
+    # Returns a string representation of the date range relative to today. For example
+    # a range of 2021-01-01..2021-12-31 will return `this_year` when the current date
+    # is somewhere in 2021.
     def relative_param
       @relative_param ||= SHORTHANDS
         .select { |key, _| key.end_with?(granularity.to_s) }
@@ -158,6 +186,12 @@ module ActiveDateRange
         &.to_s
     end
 
+    # Returns a param representation of the date range. When `relative` is true,
+    # the `relative_param` is returned when available. This allows for easy bookmarking of
+    # URL's that always return the current month/quarter/year for the end user.
+    #
+    # When `relative` is false, a `YYYYMMDD..YYYYMMDD` or `YYYYMM..YYYYMM` format is
+    # returned. The output of `to_param` is compatible with the `parse` method.
     def to_param(relative: false)
       if relative && relative_param
         relative_param
@@ -167,6 +201,7 @@ module ActiveDateRange
       end
     end
 
+    # Returns a Range with begin and end as DateTime instances.
     def to_datetime_range
       Range.new(self.begin.to_datetime.at_beginning_of_day, self.end.to_datetime.at_end_of_day)
     end
@@ -175,6 +210,8 @@ module ActiveDateRange
       "#{self.begin.strftime('%Y%m%d')}..#{self.end.strftime('%Y%m%d')}"
     end
 
+    # Returns the period previous to the current period. `periods` can be raised to return more
+    # than 1 previous period.
     def previous(periods: 1)
       if granularity
         DateRange.new(self.begin - periods.send(granularity), self.begin - 1.day)
@@ -185,6 +222,8 @@ module ActiveDateRange
       end
     end
 
+    # Returns the period next to the current period. `periods` can be raised to return more
+    # than 1 next period.
     def next(periods: 1)
       if granularity
         DateRange.new(self.end + 1.day, (self.end + periods.send(granularity)).at_end_of_month)
@@ -193,6 +232,13 @@ module ActiveDateRange
       end
     end
 
+    # Returns an array with date ranges containing full months/quarters/years in the current range.
+    # Comes in handy when you need to have columns by month for a given range:
+    # `DateRange.this_year.in_groups_of(:months)`
+    #
+    # Always returns full months/quarters/years, from the first to the last day of the period.
+    # The first and last item in the array can have a partial month/quarter/year, depending on
+    # the date range.
     def in_groups_of(granularity, amount: 1)
       raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
 
@@ -216,6 +262,7 @@ module ActiveDateRange
       end
     end
 
+    # Returns a human readable format for the date range. See DateRange::Humanizer for options.
     def humanize(format:)
       Humanizer.new(self, format: format).humanize
     end
