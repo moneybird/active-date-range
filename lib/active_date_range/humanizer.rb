@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "i18n"
+require "active_date_range/i18n"
 
 module ActiveDateRange
   # Translates a <tt>DateRange</tt> to a human readable format. Localization and translations are
