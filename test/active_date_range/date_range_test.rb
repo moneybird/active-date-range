@@ -351,4 +351,24 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
   def test_humanize
     assert_equal "January 12, 2013 - May 15, 2014", described_class.parse("20130112..20140515").humanize(format: :long)
   end
+
+  def test_before
+    assert described_class.parse("202001..202012").before?(Date.new(2021, 1, 1))
+    assert described_class.parse("202001..202012").before?(described_class.parse("202101..202112"))
+
+    assert_not described_class.parse("202001..202012").before?(Date.new(2020, 12, 31))
+    assert_not described_class.parse("202001..202012").before?(Date.new(2019, 12, 31))
+    assert_not described_class.parse("202001..202012").before?(described_class.parse("202011..202112"))
+    assert_not described_class.parse("202001..202012").before?(described_class.parse("201901..201912"))
+  end
+
+  def test_after
+    assert described_class.parse("202001..202012").after?(Date.new(2019, 12, 31))
+    assert described_class.parse("202001..202012").after?(described_class.parse("201901..201912"))
+
+    assert_not described_class.parse("202001..202012").after?(Date.new(2020, 1, 1))
+    assert_not described_class.parse("202001..202012").after?(Date.new(2020, 12, 31))
+    assert_not described_class.parse("202001..202012").after?(described_class.parse("202001..202002"))
+    assert_not described_class.parse("202001..202012").after?(described_class.parse("202101..202112"))
+  end
 end

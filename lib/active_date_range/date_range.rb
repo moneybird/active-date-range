@@ -163,6 +163,20 @@ module ActiveDateRange
       self.begin.year == self.end.year
     end
 
+    # Returns true when the date range is before the given date. Accepts both a <tt>Date</tt>
+    # and <tt>DateRange</tt> as input.
+    def before?(date)
+      date = date.begin if date.kind_of?(DateRange)
+      self.end.before?(date)
+    end
+
+    # Returns true when the date range is after the given date. Accepts both a <tt>Date</tt>
+    # and <tt>DateRange</tt> as input.
+    def after?(date)
+      date = date.end if date.kind_of?(DateRange)
+      self.begin.after?(date)
+    end
+
     # Returns the granularity of the range. Returns either <tt>:year</tt>, <tt>:quarter</tt> or
     # <tt>:month</tt> based on if the range has exactly this length.
     #
