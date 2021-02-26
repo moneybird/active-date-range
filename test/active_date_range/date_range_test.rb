@@ -172,14 +172,14 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
 
   def test_to_param
     assert_equal "202001..202001", described_class.parse("202001..202001").to_param
-    assert_equal "202001..202012", described_class.parse("202001..202012").to_param
+    assert_equal "202001..202012", described_class.parse("202001..202012").to_param(relative: false)
     assert_equal "20200101..20201210", described_class.parse("20200101..20201210").to_param
 
     %w[
       this_month prev_month next_month this_quarter prev_quarter next_quarter
       this_year prev_year next_year
     ].each do |relative|
-      assert_equal relative, described_class.parse(relative).to_param(relative: true)
+      assert_equal relative, described_class.parse(relative).to_param
     end
   end
 
@@ -346,29 +346,5 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 1, described_class.parse("202101..202112").years
     assert_equal 2, described_class.parse("202101..202212").years
     assert_nil described_class.parse("202101..202111").years
-  end
-
-  def test_humanize
-    assert_equal "January 12, 2013 - May 15, 2014", described_class.parse("20130112..20140515").humanize(format: :long)
-  end
-
-  def test_before
-    assert described_class.parse("202001..202012").before?(Date.new(2021, 1, 1))
-    assert described_class.parse("202001..202012").before?(described_class.parse("202101..202112"))
-
-    assert_not described_class.parse("202001..202012").before?(Date.new(2020, 12, 31))
-    assert_not described_class.parse("202001..202012").before?(Date.new(2019, 12, 31))
-    assert_not described_class.parse("202001..202012").before?(described_class.parse("202011..202112"))
-    assert_not described_class.parse("202001..202012").before?(described_class.parse("201901..201912"))
-  end
-
-  def test_after
-    assert described_class.parse("202001..202012").after?(Date.new(2019, 12, 31))
-    assert described_class.parse("202001..202012").after?(described_class.parse("201901..201912"))
-
-    assert_not described_class.parse("202001..202012").after?(Date.new(2020, 1, 1))
-    assert_not described_class.parse("202001..202012").after?(Date.new(2020, 12, 31))
-    assert_not described_class.parse("202001..202012").after?(described_class.parse("202001..202002"))
-    assert_not described_class.parse("202001..202012").after?(described_class.parse("202101..202112"))
   end
 end

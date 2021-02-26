@@ -214,7 +214,7 @@ module ActiveDateRange
     #   DateRange.parse("202001..202001").to_param                  # => "202001..202001"
     #   DateRange.parse("20200101..20200115").to_param              # => "20200101..20200115"
     #   DateRange.parse("202001..202001").to_param(relative: true)  # => "this_month"
-    def to_param(relative: false)
+    def to_param(relative: true)
       if relative && relative_param
         relative_param
       else
