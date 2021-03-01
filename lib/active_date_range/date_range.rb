@@ -237,7 +237,7 @@ module ActiveDateRange
     #
     #   DateRange.this_month.previous # => DateRange.prev_month
     #   DateRange.this_month.previous(2) # => DateRange.prev_month.previous + DateRange.prev_month
-    def previous(periods=1)
+    def previous(periods = 1)
       if granularity
         DateRange.new(self.begin - periods.send(granularity), self.begin - 1.day)
       elsif full_month?
@@ -252,7 +252,7 @@ module ActiveDateRange
     #
     #   DateRange.this_month.next # => DateRange.next_month
     #   DateRange.this_month.next(2) # => DateRange.next_month + DateRange.next_month.next
-    def next(periods=1)
+    def next(periods = 1)
       if granularity
         DateRange.new(self.end + 1.day, (self.end + periods.send(granularity)).at_end_of_month)
       else
