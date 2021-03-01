@@ -49,7 +49,7 @@ module ActiveDateRange
         @format = :short
       end
 
-      relative || one_day || year || quarter || month || day_range
+      one_day || year || quarter || month || day_range
     end
 
     private
