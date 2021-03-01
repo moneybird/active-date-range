@@ -193,8 +193,8 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal described_class.prev_year, described_class.this_year.previous
     assert_equal described_class.parse("201204..201302"), described_class.parse("201303..201401").previous
     assert_equal described_class.parse("201303..201401").months, described_class.parse("201303..201401").previous.months
-    assert_equal described_class.parse("201201..201312"), described_class.parse("201401..201406").previous(periods: 4)
-    assert_equal 4 * described_class.parse("201401..201406").months, described_class.parse("201401..201406").previous(periods: 4).months
+    assert_equal described_class.parse("201201..201312"), described_class.parse("201401..201406").previous(4)
+    assert_equal 4 * described_class.parse("201401..201406").months, described_class.parse("201401..201406").previous(4).months
     assert_equal described_class.parse("201304..201406"), described_class.parse("201407..201509").previous
     assert_equal described_class.parse("201407..201509").months, described_class.parse("201407..201509").previous.months
   end
@@ -204,7 +204,7 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal described_class.parse("201407..201407"), described_class.parse("201406..201406").next
     assert_equal described_class.parse("201408..201408"), described_class.parse("201407..201407").next
     assert_equal described_class.parse("201409..201409"), described_class.parse("201408..201408").next
-    assert_equal described_class.parse("201407..201410"), described_class.parse("201406..201406").next(periods: 4)
+    assert_equal described_class.parse("201407..201410"), described_class.parse("201406..201406").next(4)
     assert_equal described_class.parse("201304..201306"), described_class.parse("201301..201303").next
     assert_equal described_class.parse("201401..201412"), described_class.parse("201301..201312").next
     assert_equal described_class.parse("201403..201502"), described_class.parse("201303..201402").next

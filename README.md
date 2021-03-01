@@ -81,7 +81,7 @@ You can also do calculations with the ranges:
 
 ```ruby
 date_range.previous                             # => DateRange.parse('202001..202012')
-date_range.previous(periods: 2)                 # => DateRange.parse('201901..202012')
+date_range.previous(2)                          # => DateRange.parse('201901..202012')
 date_range.next                                 # => DateRange.parse('202201..202212')
 date_range + DateRange.parse('202201..202202)   # => DateRange.parse('202101..202202')
 date_range.in_groups_of(:month)                 # => [DateRange.parse('202101..202101'), ..., DateRange.parse('202112..202112')]

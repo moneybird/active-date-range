@@ -236,12 +236,12 @@ module ActiveDateRange
     # than 1 previous period.
     #
     #   DateRange.this_month.previous # => DateRange.prev_month
-    #   DateRange.this_month.previous(periods: 2) # => DateRange.prev_month.previous + DateRange.prev_month
-    def previous(periods: 1)
+    #   DateRange.this_month.previous(2) # => DateRange.prev_month.previous + DateRange.prev_month
+    def previous(periods=1)
       if granularity
         DateRange.new(self.begin - periods.send(granularity), self.begin - 1.day)
       elsif full_month?
-        DateRange.new(in_groups_of(:month).first.previous(periods: periods * months).begin, self.begin - 1.day)
+        DateRange.new(in_groups_of(:month).first.previous(periods * months).begin, self.begin - 1.day)
       else
         DateRange.new((self.begin - (periods * days).days).at_beginning_of_month, self.begin - 1.day)
       end
@@ -251,8 +251,8 @@ module ActiveDateRange
     # than 1 next period.
     #
     #   DateRange.this_month.next # => DateRange.next_month
-    #   DateRange.this_month.next(periods: 2) # => DateRange.next_month + DateRange.next_month.next
-    def next(periods: 1)
+    #   DateRange.this_month.next(2) # => DateRange.next_month + DateRange.next_month.next
+    def next(periods=1)
       if granularity
         DateRange.new(self.end + 1.day, (self.end + periods.send(granularity)).at_end_of_month)
       else
