@@ -294,7 +294,7 @@ module ActiveDateRange
     end
 
     # Returns a human readable format for the date range. See DateRange::Humanizer for options.
-    def humanize(format: nil)
+    def humanize(format: :short)
       Humanizer.new(self, format: format).humanize
     end
   end

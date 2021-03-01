@@ -347,4 +347,9 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 2, described_class.parse("202101..202212").years
     assert_nil described_class.parse("202101..202111").years
   end
+
+  def test_humanize
+    assert_equal "Q1 2021", described_class.parse("202101..202103").humanize
+    assert_equal "quarter 1 2021", described_class.parse("202101..202103").humanize(format: :long)
+  end
 end
