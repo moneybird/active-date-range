@@ -14,6 +14,9 @@ class ActiveDateRangeHumanizerTest < ActiveSupport::TestCase
     assert_equal "the previous year", ActiveDateRange::Humanizer.new(range.prev_year, format: :relative).humanize
     assert_equal "the previous month", ActiveDateRange::Humanizer.new(range.prev_month, format: :relative).humanize
     assert_equal "the previous quarter", ActiveDateRange::Humanizer.new(range.prev_quarter, format: :relative).humanize
+
+    assert_equal "2019", ActiveDateRange::Humanizer.new(range.parse("201901..201912"), format: :relative).humanize
+    assert_equal "Jan 2020", ActiveDateRange::Humanizer.new(range.parse("202001..202001"), format: :relative).humanize
   end
 
   def test_humanize_one_day

@@ -43,13 +43,17 @@ module ActiveDateRange
     def humanize
       return day_range if format == :explicit
 
+      if format == :relative
+        return relative if date_range.relative_param
+
+        @format = :short
+      end
+
       relative || one_day || year || quarter || month || day_range
     end
 
     private
       def relative
-        return unless format == :relative && date_range.relative_param
-
         I18n.translate(date_range.relative_param, scope: %i[date relative_range])
       end
 
