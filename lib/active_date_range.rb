@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # require "active_support"
+require "active_support/core_ext/array"
 require "active_support/core_ext/time"
 require "active_support/core_ext/date"
 require "active_support/core_ext/integer"

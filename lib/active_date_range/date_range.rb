@@ -273,29 +273,27 @@ module ActiveDateRange
     def in_groups_of(granularity, amount: 1)
       raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
 
-      [].tap do |groups|
-        current_date = self.begin
-        while current_date <= self.end
-          end_date = amount == 1 ? current_date : (current_date + amount.send(granularity) - 1.day)
-          groups << DateRange.new(
-            current_date.send("at_beginning_of_#{granularity}"),
-            end_date.send("at_end_of_#{granularity}")
-          )
-          current_date += amount.send(granularity)
-        end
-
-        groups[0] = DateRange.new(self.begin, groups.first.end) if groups.first.begin != self.begin
-        if groups.last.end > self.end
-          groups[groups.length - 1] = DateRange.new(groups.last.begin, self.end)
-        elsif groups.last.end < self.end
-          groups << DateRange.new(self.end.send("at_beginning_of_#{granularity}"), self.end)
-        end
-      end
+      group_by { |d| group_format(granularity, d) }
+        .map { |_, group| DateRange.new(group.first, group.last) }
+        .in_groups_of(amount)
+        .map { |groups| groups.sum }
     end
 
     # Returns a human readable format for the date range. See DateRange::Humanizer for options.
     def humanize(format: :short)
       Humanizer.new(self, format: format).humanize
     end
+
+    private
+      def group_format(granularity, date)
+        case granularity
+        when :year
+          date.year
+        when :quarter
+          [date.year, date.quarter]
+        when :month
+          [date.year, date.month]
+        end
+      end
   end
 end
