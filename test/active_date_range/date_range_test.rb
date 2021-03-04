@@ -275,7 +275,6 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
       described_class.parse("201201..201406").in_groups_of(:month, amount: 6)
     )
 
-
     assert_equal(
       [
         described_class.parse("202101..202103"),

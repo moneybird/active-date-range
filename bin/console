@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
+require "active_support"
 require "active_date_range"
 
 Time.zone = "UTC"

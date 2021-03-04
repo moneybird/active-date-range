@@ -273,27 +273,15 @@ module ActiveDateRange
     def in_groups_of(granularity, amount: 1)
       raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
 
-      group_by { |d| group_format(granularity, d) }
-        .map { |_, group| DateRange.new(group.first, group.last) }
+      group_by { |d| [d.year, d.send(granularity)] }
+        .map { |_, group| DateRange.new(group.first..group.last) }
         .in_groups_of(amount)
-        .map { |groups| groups.sum }
+        .map { |group| group.inject(:+) }
     end
 
     # Returns a human readable format for the date range. See DateRange::Humanizer for options.
     def humanize(format: :short)
       Humanizer.new(self, format: format).humanize
     end
-
-    private
-      def group_format(granularity, date)
-        case granularity
-        when :year
-          date.year
-        when :quarter
-          [date.year, date.quarter]
-        when :month
-          [date.year, date.month]
-        end
-      end
   end
 end
