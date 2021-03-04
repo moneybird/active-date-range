@@ -5,16 +5,7 @@ class Date
   #
   #   Date.new(2021, 1, 1) # => 1
   def quarter
-    case month
-    when 1..3
-      1
-    when 4..6
-      2
-    when 7..9
-      3
-    when 10..12
-      4
-    end
+    (month / 3.0).ceil
   end
 
   # Shifts the date to the next quarter
