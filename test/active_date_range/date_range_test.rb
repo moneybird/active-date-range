@@ -144,9 +144,9 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert described_class.this_year.full_quarter?
     assert described_class.this_year.full_year?
 
-    assert described_class.new(Date.new(2020, 1, 1), Date.new(2020, 9, 30)).full_month?
-    assert described_class.new(Date.new(2020, 1, 1), Date.new(2020, 9, 30)).full_quarter?
-    assert described_class.new(Date.new(2020, 1, 1), Date.new(2021, 12, 31)).full_year?
+    assert described_class.new(Date.new(2020, 1, 1), Date.new(2020, 9, 30)).full_months?
+    assert described_class.new(Date.new(2020, 1, 1), Date.new(2020, 9, 30)).full_quarters?
+    assert described_class.new(Date.new(2020, 1, 1), Date.new(2021, 12, 31)).full_years?
 
     assert_not described_class.new(Date.new(2020, 1, 1), Date.new(2020, 9, 29)).full_month?
     assert_not described_class.new(Date.new(2020, 1, 1), Date.new(2020, 9, 29)).full_quarter?

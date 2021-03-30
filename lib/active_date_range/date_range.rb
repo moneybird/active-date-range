@@ -148,15 +148,21 @@ module ActiveDateRange
       begin_at_beginning_of_month? && self.end == self.end.at_end_of_month
     end
 
+    alias :full_months? :full_month?
+
     # Returns true when the range is exactly one or more quarters long
     def full_quarter?
       begin_at_beginning_of_quarter? && self.end == self.end.at_end_of_quarter
     end
 
+    alias :full_quarters? :full_quarter?
+
     # Returns true when the range is exactly one or more years long
     def full_year?
       begin_at_beginning_of_year? && self.end == self.end.at_end_of_year
     end
+
+    alias :full_years? :full_year?
 
     # Returns true when begin and end are in the same year
     def same_year?
