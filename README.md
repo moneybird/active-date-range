@@ -108,8 +108,8 @@ In your controller, use the parameter in your queries:
 
 ```ruby
 def report
-    @period = DateRange.parse(params[:period])
-    @data = SomeModel.where(date: @period)
+  @period = DateRange.parse(params[:period])
+  @data = SomeModel.where(date: @period)
 end
 ```
 
