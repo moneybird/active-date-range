@@ -14,8 +14,8 @@ require "active_date_range/humanizer"
 
 module ActiveDateRange
   class Error < StandardError; end
-  class InvalidDateRange < StandardError; end
-  class InvalidAddition < StandardError; end
-  class InvalidDateRangeFormat < StandardError; end
-  class UnknownGranularity < StandardError; end
+  class InvalidDateRange < Error; end
+  class InvalidAddition < Error; end
+  class InvalidDateRangeFormat < Error; end
+  class UnknownGranularity < Error; end
 end
