@@ -1,6 +1,6 @@
 # Active Date Range
 
-`ActiveDateRange` provides a range of dates with a powerful API to manipulate and use date ranges in your software. Date ranges are commonly used in reporting tools, but can be of use in many situation where you need filtering.
+`ActiveDateRange` provides a range of dates with a powerful API to manipulate and use date ranges in your software. Date ranges are commonly used in reporting tools, but can be of use in many situation where you need for example filtering or reporting.
 
 ## Installation
 
@@ -97,6 +97,8 @@ And lastly you can call `.humanize` to get a localizable human representation of
 date_range.humanize                      # => '2021'
 date_range.humanize(format: :explicit)   # => 'January 1st, 2021 - December 31st 2021'
 ```
+
+See [active_date_range/locale/en.yml](https://github.com/moneybird/active-date-range/blob/main/lib/active_date_range/locale/en.yml) for all the I18n keys you need to translate for your application.
 
 ### Usage example
 

@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Edwin Vlieg"]
   spec.email         = ["edwin@moneybird.com"]
 
-  spec.summary       = %q{DateRange for ActiveSupport}
-  spec.description   = %q{Enables reasoning about ranges of dates.}
+  spec.summary       = "DateRange for ActiveSupport"
+  spec.description   = "ActiveDateRange provides a range of dates with a powerful API to manipulate and use date ranges in your software."
   spec.homepage      = "https://github.com/moneybird/active-date-range"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
