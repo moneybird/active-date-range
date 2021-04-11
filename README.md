@@ -36,7 +36,11 @@ ActiveDateRange::DateRange.this_month
 ActiveDateRange::DateRange.this_year
 ActiveDateRange::DateRange.this_quarter
 ActiveDateRange::DateRange.prev_month
+ActiveDateRange::DateRange.prev_year
+ActiveDateRange::DateRange.prev_quarter
 ActiveDateRange::DateRange.next_month
+ActiveDateRange::DateRange.next_year
+ActiveDateRange::DateRange.next_quarter
 ```
 
 The third option is to use parse:
@@ -83,7 +87,7 @@ You can also do calculations with the ranges:
 date_range.previous                             # => DateRange.parse('202001..202012')
 date_range.previous(2)                          # => DateRange.parse('201901..202012')
 date_range.next                                 # => DateRange.parse('202201..202212')
-date_range + DateRange.parse('202201..202202)   # => DateRange.parse('202101..202202')
+date_range + DateRange.parse('202201..202202')  # => DateRange.parse('202101..202202')
 date_range.in_groups_of(:month)                 # => [DateRange.parse('202101..202101'), ..., DateRange.parse('202112..202112')]
 ```
 
