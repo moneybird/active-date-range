@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 begin
   require "i18n"
   require "i18n/backend/fallbacks"
