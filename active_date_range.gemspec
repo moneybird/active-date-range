@@ -11,8 +11,6 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/moneybird/active-date-range"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/moneybird/active-date-range"
   spec.metadata["changelog_uri"] = "https://github.com/moneybird/active-date-range/CHANGELOG.md"
