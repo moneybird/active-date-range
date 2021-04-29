@@ -29,18 +29,21 @@ ActiveDateRange::DateRange.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31))
 ActiveDateRange::DateRange.new(Date.new(2021, 1, 1)..Date.new(2021, 12, 31))
 ```
 
-You can also use shorthands to initialize a range relative to today. Shorthands are available for `this`, `prev` and `next` for the ranges `month`, `quarter` and `year`:
+You can also use shorthands to initialize a range relative to today. Shorthands are available for `this`, `prev` and `next` for the ranges `month`, `quarter`, `year` and `week`:
 
 ```ruby
 ActiveDateRange::DateRange.this_month
 ActiveDateRange::DateRange.this_year
 ActiveDateRange::DateRange.this_quarter
+ActiveDateRange::DateRange.this_week
 ActiveDateRange::DateRange.prev_month
 ActiveDateRange::DateRange.prev_year
 ActiveDateRange::DateRange.prev_quarter
+ActiveDateRange::DateRange.prev_week
 ActiveDateRange::DateRange.next_month
 ActiveDateRange::DateRange.next_year
 ActiveDateRange::DateRange.next_quarter
+ActiveDateRange::DateRange.next_week
 ```
 
 The third option is to use parse:
@@ -71,6 +74,7 @@ date_range.months                           # => 12
 date_range.quarters                         # => 4
 date_range.years                            # => 1
 date_range.one_month?                       # => false
+date_range.one_week?                        # => false
 date_range.one_year?                        # => true
 date_range.full_year?                       # => true
 date_range.same_year?                       # => true

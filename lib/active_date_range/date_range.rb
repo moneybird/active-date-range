@@ -12,7 +12,10 @@ module ActiveDateRange
       next_quarter: -> { DateRange.new(3.months.from_now.to_date.all_quarter) },
       this_year: -> { DateRange.new(Time.zone.today.all_year) },
       prev_year: -> { DateRange.new(12.months.ago.to_date.all_year) },
-      next_year: -> { DateRange.new(12.months.from_now.to_date.all_year) }
+      next_year: -> { DateRange.new(12.months.from_now.to_date.all_year) },
+      this_week: -> { DateRange.new(Time.zone.today.all_week) },
+      prev_week: -> { DateRange.new(1.week.ago.to_date.all_week) },
+      next_week: -> { DateRange.new(1.week.from_now.to_date.all_week) }
     }.freeze
 
     RANGE_PART_REGEXP = %r{\A(?<year>((1\d|2\d)\d\d))-?(?<month>0[1-9]|1[012])-?(?<day>[0-2]\d|3[01])?\z}
@@ -107,6 +110,13 @@ module ActiveDateRange
       months / 12
     end
 
+    # Returns the number of weeks on the range or nil when range is no full week
+    def weeks
+      return nil unless full_week?
+
+      days / 7
+    end
+
     # Returns true when begin of the range is at the beginning of the month
     def begin_at_beginning_of_month?
       self.begin.day == 1
@@ -120,6 +130,11 @@ module ActiveDateRange
     # Returns true when begin of the range is at the beginning of the year
     def begin_at_beginning_of_year?
       begin_at_beginning_of_month? && self.begin.month == 1
+    end
+
+    # Returns true when begin of the range is at the beginning of the week
+    def begin_at_beginning_of_week?
+      self.begin == self.begin.at_beginning_of_week
     end
 
     # Returns true when the range is exactly one month long
@@ -143,6 +158,12 @@ module ActiveDateRange
         self.end == self.begin.at_end_of_year
     end
 
+    def one_week?
+      days == 7 &&
+        begin_at_beginning_of_week? &&
+        self.end == self.begin.at_end_of_week
+    end
+
     # Returns true when the range is exactly one or more months long
     def full_month?
       begin_at_beginning_of_month? && self.end == self.end.at_end_of_month
@@ -163,6 +184,13 @@ module ActiveDateRange
     end
 
     alias :full_years? :full_year?
+
+    # Returns true when the range is exactly one or more weeks long
+    def full_week?
+      begin_at_beginning_of_week? && self.end == self.end.at_end_of_week
+    end
+
+    alias :full_weeks? :full_week?
 
     # Returns true when begin and end are in the same year
     def same_year?
@@ -196,6 +224,8 @@ module ActiveDateRange
         :quarter
       elsif one_month?
         :month
+      elsif one_week?
+        :week
       end
     end
 
@@ -244,13 +274,17 @@ module ActiveDateRange
     #   DateRange.this_month.previous # => DateRange.prev_month
     #   DateRange.this_month.previous(2) # => DateRange.prev_month.previous + DateRange.prev_month
     def previous(periods = 1)
-      if granularity
-        DateRange.new(self.begin - periods.send(granularity), self.begin - 1.day)
+      begin_date = if granularity
+        self.begin - periods.send(granularity)
       elsif full_month?
-        DateRange.new(in_groups_of(:month).first.previous(periods * months).begin, self.begin - 1.day)
+        in_groups_of(:month).first.previous(periods * months).begin
       else
-        DateRange.new((self.begin - (periods * days).days).at_beginning_of_month, self.begin - 1.day)
+        (self.begin - (periods * days).days)
       end
+
+      begin_date = begin_date.at_beginning_of_month if full_month?
+
+      DateRange.new(begin_date, self.begin - 1.day)
     end
 
     # Returns the period next to the current period. `periods` can be raised to return more
@@ -259,11 +293,10 @@ module ActiveDateRange
     #   DateRange.this_month.next # => DateRange.next_month
     #   DateRange.this_month.next(2) # => DateRange.next_month + DateRange.next_month.next
     def next(periods = 1)
-      if granularity
-        DateRange.new(self.end + 1.day, (self.end + periods.send(granularity)).at_end_of_month)
-      else
-        DateRange.new(self.end + 1.day, (self.end + days.days).at_end_of_month)
-      end
+      end_date = self.end + (granularity ? periods.send(granularity) : days.days)
+      end_date = end_date.at_end_of_month if full_month?
+
+      DateRange.new(self.end + 1.day, end_date)
     end
 
     # Returns an array with date ranges containing full months/quarters/years in the current range.

@@ -39,6 +39,9 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal Date.today.all_year, described_class.this_year
     assert_equal 12.months.ago.to_date.all_year, described_class.prev_year
     assert_equal 12.months.from_now.to_date.all_year, described_class.next_year
+    assert_equal Date.today.all_week, described_class.this_week
+    assert_equal 1.week.ago.to_date.all_week, described_class.prev_week
+    assert_equal 1.week.from_now.to_date.all_week, described_class.next_week
   end
 
   def test_parse
@@ -60,6 +63,9 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal described_class.this_year, described_class.parse("this_year")
     assert_equal described_class.prev_year, described_class.parse("prev_year")
     assert_equal described_class.next_year, described_class.parse("next_year")
+    assert_equal described_class.this_week, described_class.parse("this_week")
+    assert_equal described_class.prev_week, described_class.parse("prev_week")
+    assert_equal described_class.next_week, described_class.parse("next_week")
     (Date.new(2021, 1, 1)..Date.new(2021, 12, 31)).to_a.each do |date|
       assert_equal described_class.new(date, date), described_class.parse("#{date.strftime("%Y%m%d")}..#{date.strftime("%Y%m%d")}")
     end
@@ -73,6 +79,10 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     b = described_class.new(Date.new(2021, 2, 1)..Date.new(2021, 2, 28))
     c = described_class.new(Date.new(2021, 3, 1)..Date.new(2021, 3, 31))
     assert_equal Date.new(2021, 1, 1)..Date.new(2021, 2, 28), a + b
+
+    a = described_class.parse("20210419..20210425")
+    b = described_class.parse("20210426..20210502")
+    assert_equal described_class.parse("20210419..20210502"), a + b
 
     assert_raises(ActiveDateRange::InvalidAddition) { a + c }
   end
@@ -108,10 +118,17 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_not described_class.parse("202002..202002").begin_at_beginning_of_year?
   end
 
+  def test_begin_at_beginning_of_week
+    assert described_class.parse("20210419..20210425").begin_at_beginning_of_week?
+    assert_not described_class.parse("20210418..20210424").begin_at_beginning_of_week?
+    assert_not described_class.parse("20210420..20210426").begin_at_beginning_of_week?
+  end
+
   def test_one_methods
     assert described_class.this_month.one_month?
     assert described_class.this_quarter.one_quarter?
     assert described_class.this_year.one_year?
+    assert described_class.this_week.one_week?
 
     assert described_class.parse("202001..202003").one_quarter?
     assert described_class.parse("202101..202103").one_quarter?
@@ -157,12 +174,14 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal :month, described_class.this_month.granularity
     assert_equal :quarter, described_class.this_quarter.granularity
     assert_equal :year, described_class.this_year.granularity
+    assert_equal :week, described_class.this_week.granularity
   end
 
   def test_days
     assert_equal 1, described_class.parse("20210101..20210101").days
     assert_equal 31, described_class.parse("202101..202101").days
     assert_equal 365, described_class.parse("202101..202112").days
+    assert_equal 7, described_class.parse("this_week").days
   end
 
   def test_same_year
@@ -177,7 +196,7 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
 
     %w[
       this_month prev_month next_month this_quarter prev_quarter next_quarter
-      this_year prev_year next_year
+      this_year prev_year next_year this_week prev_week next_week
     ].each do |relative|
       assert_equal relative, described_class.parse(relative).to_param
     end
@@ -191,12 +210,17 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal described_class.prev_month, described_class.this_month.previous
     assert_equal described_class.prev_quarter, described_class.this_quarter.previous
     assert_equal described_class.prev_year, described_class.this_year.previous
+    assert_equal described_class.prev_week, described_class.this_week.previous
     assert_equal described_class.parse("201204..201302"), described_class.parse("201303..201401").previous
     assert_equal described_class.parse("201303..201401").months, described_class.parse("201303..201401").previous.months
     assert_equal described_class.parse("201201..201312"), described_class.parse("201401..201406").previous(4)
     assert_equal 4 * described_class.parse("201401..201406").months, described_class.parse("201401..201406").previous(4).months
     assert_equal described_class.parse("201304..201406"), described_class.parse("201407..201509").previous
     assert_equal described_class.parse("201407..201509").months, described_class.parse("201407..201509").previous.months
+    assert_equal described_class.parse("20210412..20210418"), described_class.parse("20210419..20210425").previous
+    assert_equal described_class.parse("20210413..20210419"), described_class.parse("20210420..20210426").previous
+    assert_equal described_class.parse("20210329..20210411"), described_class.parse("20210412..20210425").previous
+    assert_equal described_class.parse("20210328..20210410"), described_class.parse("20210411..20210424").previous
   end
 
   def test_next
@@ -210,6 +234,7 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal described_class.parse("201403..201502"), described_class.parse("201303..201402").next
     assert_equal described_class.parse("201510..201612"), described_class.parse("201407..201509").next
     assert_equal described_class.parse("201407..201509").months, described_class.parse("201407..201509").next.months
+    assert_equal described_class.next_week, described_class.this_week.next
   end
 
   def test_in_groups_of
@@ -345,6 +370,12 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 1, described_class.parse("202101..202112").years
     assert_equal 2, described_class.parse("202101..202212").years
     assert_nil described_class.parse("202101..202111").years
+  end
+
+  def test_weeks
+    assert_equal 1, described_class.parse("20210419..20210425").weeks
+    assert_equal 2, described_class.parse("20210412..20210425").weeks
+    assert_nil described_class.parse("20210419..20210424").weeks
   end
 
   def test_humanize
