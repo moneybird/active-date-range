@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_date_range (0.1.0)
+    active_date_range (0.2.0)
       activesupport (~> 6.1)
       i18n
 

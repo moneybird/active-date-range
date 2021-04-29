@@ -1,3 +1,5 @@
+## 0.2.0
+
 * Add support for weeks:
 
   - Shorthands for `this_week`, `next_week` and `prev_week`
