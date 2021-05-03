@@ -282,7 +282,7 @@ module ActiveDateRange
     #   DateRange.this_month.previous # => DateRange.prev_month
     #   DateRange.this_month.previous(2) # => DateRange.prev_month.previous + DateRange.prev_month
     def previous(periods = 1)
-      raise BoundlessRangeError if boundless?
+      raise BoundlessRangeError, "Can't calculate previous for boundless range" if boundless?
 
       begin_date = if granularity
         self.begin - periods.send(granularity)
@@ -303,7 +303,7 @@ module ActiveDateRange
     #   DateRange.this_month.next # => DateRange.next_month
     #   DateRange.this_month.next(2) # => DateRange.next_month + DateRange.next_month.next
     def next(periods = 1)
-      raise BoundlessRangeError if boundless?
+      raise BoundlessRangeError, "Can't calculate next for boundless range" if boundless?
 
       end_date = self.end + (granularity ? periods.send(granularity) : days.days)
       end_date = end_date.at_end_of_month if full_month?
@@ -322,7 +322,7 @@ module ActiveDateRange
     #   DateRange.parse("202101..202103").in_groups_of(:month) # => [DateRange.parse("202001..202001"), DateRange.parse("202002..202002"), DateRange.parse("202003..202003")]
     #   DateRange.parse("202101..202106").in_groups_of(:month, amount: 2) # => [DateRange.parse("202001..202002"), DateRange.parse("202003..202004"), DateRange.parse("202005..202006")]
     def in_groups_of(granularity, amount: 1)
-      raise BoundlessRangeError, "Can't group date range without a begin, try `reversed_in_groups_of`." if self.begin.nil?
+      raise BoundlessRangeError, "Can't group date range without a begin." if self.begin.nil?
 
       if boundless?
         grouped_collection(granularity, amount: amount)
