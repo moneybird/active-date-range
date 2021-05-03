@@ -382,4 +382,53 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal "Q1 2021", described_class.parse("202101..202103").humanize
     assert_equal "quarter 1 2021", described_class.parse("202101..202103").humanize(format: :long)
   end
+
+  def test_boundless
+    boundless = described_class.new(Date.new(2021, 1, 1), nil)
+
+    assert_nil boundless.end
+    assert_equal false, boundless.one_month?
+    assert_equal false, boundless.one_quarter?
+    assert_equal false, boundless.one_year?
+    assert_equal false, boundless.full_month?
+    assert_equal false, boundless.full_quarter?
+    assert_equal false, boundless.full_year?
+    assert_equal "20210101..", boundless.to_param
+    assert boundless.after?(Date.new(2020, 1, 1))
+    assert_not boundless.after?(Date.new(2021, 3, 1))
+    assert_not boundless.before?(Date.new(2020, 3, 1))
+    assert_not boundless.before?(Date.new(2021, 3, 1))
+    assert_nil boundless.granularity
+    assert_equal "Jan 01, 2021 - ∞", boundless.humanize
+    assert_equal boundless, described_class.parse("20210101..")
+    assert_equal(
+      described_class.parse("202101..202112").in_groups_of(:month),
+      boundless.in_groups_of(:month).take(12).to_a
+    )
+    assert_raises(ActiveDateRange::BoundlessRangeError) { boundless.next }
+    assert_raises(ActiveDateRange::BoundlessRangeError) { boundless.previous }
+  end
+
+  def test_boundless_begin
+    boundless = described_class.new(nil, Date.new(2021, 5, 1))
+
+    assert_nil boundless.begin
+    assert_equal false, boundless.one_month?
+    assert_equal false, boundless.one_quarter?
+    assert_equal false, boundless.one_year?
+    assert_equal false, boundless.full_month?
+    assert_equal false, boundless.full_quarter?
+    assert_equal false, boundless.full_year?
+    assert_equal "..20210501", boundless.to_param
+    assert_not boundless.after?(Date.new(2021, 1, 1))
+    assert_not boundless.after?(Date.new(2021, 6, 1))
+    assert boundless.before?(Date.new(2021, 6, 1))
+    assert_not boundless.before?(Date.new(2021, 3, 1))
+    assert_nil boundless.granularity
+    assert_equal "∞ - May 01, 2021", boundless.humanize
+    assert_equal boundless, described_class.parse("..20210501")
+    assert_raises(ActiveDateRange::BoundlessRangeError) { boundless.in_groups_of(:month) }
+    assert_raises(ActiveDateRange::BoundlessRangeError) { boundless.next }
+    assert_raises(ActiveDateRange::BoundlessRangeError) { boundless.previous }
+  end
 end

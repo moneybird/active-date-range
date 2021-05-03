@@ -18,4 +18,5 @@ module ActiveDateRange
   class InvalidAddition < Error; end
   class InvalidDateRangeFormat < Error; end
   class UnknownGranularity < Error; end
+  class BoundlessRangeError < Error; end
 end

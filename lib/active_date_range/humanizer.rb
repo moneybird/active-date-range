@@ -108,10 +108,17 @@ module ActiveDateRange
         month_format = date_range.full_month? ? "month" : "day_month"
         abbr = "abbr_" if date_range.same_year?
 
+        begin_formatted = I18n.localize(date_range.begin, format: :"#{abbr}#{format}_#{month_format}") if date_range.begin
+        end_formatted = I18n.localize(date_range.end, format: :"#{format}_#{month_format}") if date_range.end
+
         range(
-          I18n.localize(date_range.begin, format: :"#{abbr}#{format}_#{month_format}"),
-          I18n.localize(date_range.end, format: :"#{format}_#{month_format}")
+          begin_formatted || infinite,
+          end_formatted || infinite
         )
+      end
+
+      def infinite
+        '∞'
       end
 
       def range(range_begin, range_end)
