@@ -4,7 +4,6 @@ require "active_model"
 require "test_helper"
 
 class ActiveDateRangeAttributesTest < ActiveSupport::TestCase
-
   class TestReport
     include ActiveModel::Attributes
 
