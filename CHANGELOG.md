@@ -1,3 +1,11 @@
+* Add intersection support:
+
+  ```
+  date_range.intersection(other_date_range) # => DateRange
+  ```
+
+  *Edwin Vlieg*
+
 * Add ActiveModel type for date range:
 
   ```
