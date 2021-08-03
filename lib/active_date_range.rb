@@ -11,6 +11,7 @@ require "active_date_range/core_ext/date"
 require "active_date_range/version"
 require "active_date_range/date_range"
 require "active_date_range/humanizer"
+require "active_date_range/active_model_type"
 
 module ActiveDateRange
   class Error < StandardError; end

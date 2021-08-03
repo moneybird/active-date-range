@@ -104,6 +104,18 @@ date_range.humanize(format: :explicit)   # => 'January 1st, 2021 - December 31st
 
 See [active_date_range/locale/en.yml](https://github.com/moneybird/active-date-range/blob/main/lib/active_date_range/locale/en.yml) for all the I18n keys you need to translate for your application.
 
+### ActiveModel type
+
+Date ranges are also available as an ActiveModel type. So you can use a date range attribute and the value will automatically be converted:
+
+```ruby
+class Report
+  include ActiveModel::Attributes
+
+  attribute :period, :date_range
+end
+```
+
 ### Usage example
 
 Use the shorthands to link to a specific period:

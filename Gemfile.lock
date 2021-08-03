@@ -21,6 +21,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    activemodel (6.1.3.2)
+      activesupport (= 6.1.3.2)
     activesupport (6.1.3.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
@@ -128,6 +130,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_date_range!
+  activemodel
   guard
   guard-minitest
   minitest (~> 5.0)

@@ -1,3 +1,11 @@
+* Add ActiveModel type for date range:
+
+  ```
+  attribute :period, :date_range
+  ```
+
+  *Edwin Vlieg*
+
 ## 0.2.0
 
 * Add support for weeks:
