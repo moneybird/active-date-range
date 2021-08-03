@@ -118,7 +118,7 @@ module ActiveDateRange
       end
 
       def infinite
-        '∞'
+        "∞"
       end
 
       def range(range_begin, range_end)
