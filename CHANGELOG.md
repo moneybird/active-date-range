@@ -6,6 +6,18 @@
 
   *Edwin Vlieg*
 
+
+* Add support for boundless ranges:
+
+  ```
+  date_range = DateRange.parse('202101..')
+  date_range.boundless? # => true
+  date_range.in_groups_of(:month) # => Enumerator::Lazy
+  Model.where(date: date_range) # => SQL "WHERE date >= 2021-01-01"
+  ```
+
+  *Edwin Vlieg*
+
 * Add ActiveModel type for date range:
 
   ```

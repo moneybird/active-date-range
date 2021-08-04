@@ -96,6 +96,15 @@ date_range.in_groups_of(:month)                 # => [DateRange.parse('202101..2
 date_range.intersection(DateRange.parse('202101..202102')) # => DateRange.parse('202101..202102')
 ```
 
+Support for boundless ranges is also available:
+
+```ruby
+date_range = DateRange.parse('202101..')
+date_range.boundless? # => true
+date_range.in_groups_of(:month) # => Enumerator::Lazy
+Model.where(date: date_range) # => SQL "WHERE date >= 2021-01-01"
+```
+
 And lastly you can call `.humanize` to get a localizable human representation of the range for in the user interface:
 
 ```ruby
