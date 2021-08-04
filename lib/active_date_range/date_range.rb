@@ -35,12 +35,14 @@ module ActiveDateRange
       return SHORTHANDS[input.to_sym].call if SHORTHANDS.key?(input.to_sym)
 
       begin_date, end_date = input.split("..")
-      raise InvalidDateRangeFormat, "#{input} doesn't have a begin..end format" unless begin_date && end_date
+      raise InvalidDateRangeFormat, "#{input} doesn't have a begin..end format" if begin_date.blank? && end_date.blank?
 
       DateRange.new(parse_date(begin_date), parse_date(end_date, last: true))
     end
 
     def self.parse_date(input, last: false)
+      return if input.blank?
+
       match_data = input.match(RANGE_PART_REGEXP)
       raise InvalidDateRangeFormat, "#{input} isn't a valid date format YYYYMMDD or YYYYMM" unless match_data
 
@@ -65,9 +67,9 @@ module ActiveDateRange
       begin_date = begin_date.to_date if begin_date.kind_of?(Time)
       end_date = end_date.to_date if end_date.kind_of?(Time)
 
-      raise InvalidDateRange, "Date range invalid, begin should be a date" unless begin_date.kind_of?(Date)
-      raise InvalidDateRange, "Date range invalid, end should be a date" unless end_date.kind_of?(Date)
-      raise InvalidDateRange, "Date range invalid, begin #{begin_date} is after end #{end_date}" if begin_date > end_date
+      raise InvalidDateRange, "Date range invalid, begin should be a date" if begin_date && !begin_date.kind_of?(Date)
+      raise InvalidDateRange, "Date range invalid, end should be a date" if end_date && !end_date.kind_of?(Date)
+      raise InvalidDateRange, "Date range invalid, begin #{begin_date} is after end #{end_date}" if begin_date && end_date && begin_date > end_date
 
       super(begin_date, end_date)
     end
@@ -84,8 +86,14 @@ module ActiveDateRange
       self.begin <=> other.begin
     end
 
+    def boundless?
+      self.begin.nil? || self.end.nil?
+    end
+
     # Returns the number of days in the range
     def days
+      return if boundless?
+
       @days ||= (self.end - self.begin).to_i + 1
     end
 
@@ -119,22 +127,22 @@ module ActiveDateRange
 
     # Returns true when begin of the range is at the beginning of the month
     def begin_at_beginning_of_month?
-      self.begin.day == 1
+      self.begin.present? && self.begin.day == 1
     end
 
     # Returns true when begin of the range is at the beginning of the quarter
     def begin_at_beginning_of_quarter?
-      begin_at_beginning_of_month? && [1, 4, 7, 10].include?(self.begin.month)
+      self.begin.present? && begin_at_beginning_of_month? && [1, 4, 7, 10].include?(self.begin.month)
     end
 
     # Returns true when begin of the range is at the beginning of the year
     def begin_at_beginning_of_year?
-      begin_at_beginning_of_month? && self.begin.month == 1
+      self.begin.present? && begin_at_beginning_of_month? && self.begin.month == 1
     end
 
     # Returns true when begin of the range is at the beginning of the week
     def begin_at_beginning_of_week?
-      self.begin == self.begin.at_beginning_of_week
+      self.begin.present? && self.begin == self.begin.at_beginning_of_week
     end
 
     # Returns true when the range is exactly one month long
@@ -166,49 +174,49 @@ module ActiveDateRange
 
     # Returns true when the range is exactly one or more months long
     def full_month?
-      begin_at_beginning_of_month? && self.end == self.end.at_end_of_month
+      begin_at_beginning_of_month? && self.end.present? && self.end == self.end.at_end_of_month
     end
 
     alias :full_months? :full_month?
 
     # Returns true when the range is exactly one or more quarters long
     def full_quarter?
-      begin_at_beginning_of_quarter? && self.end == self.end.at_end_of_quarter
+      begin_at_beginning_of_quarter? && self.end.present? && self.end == self.end.at_end_of_quarter
     end
 
     alias :full_quarters? :full_quarter?
 
     # Returns true when the range is exactly one or more years long
     def full_year?
-      begin_at_beginning_of_year? && self.end == self.end.at_end_of_year
+      begin_at_beginning_of_year? && self.end.present? && self.end == self.end.at_end_of_year
     end
 
     alias :full_years? :full_year?
 
     # Returns true when the range is exactly one or more weeks long
     def full_week?
-      begin_at_beginning_of_week? && self.end == self.end.at_end_of_week
+      begin_at_beginning_of_week? && self.end.present? && self.end == self.end.at_end_of_week
     end
 
     alias :full_weeks? :full_week?
 
     # Returns true when begin and end are in the same year
     def same_year?
-      self.begin.year == self.end.year
+      !boundless? && self.begin.year == self.end.year
     end
 
     # Returns true when the date range is before the given date. Accepts both a <tt>Date</tt>
     # and <tt>DateRange</tt> as input.
     def before?(date)
       date = date.begin if date.kind_of?(DateRange)
-      self.end.before?(date)
+      self.end.present? && self.end.before?(date)
     end
 
     # Returns true when the date range is after the given date. Accepts both a <tt>Date</tt>
     # and <tt>DateRange</tt> as input.
     def after?(date)
       date = date.end if date.kind_of?(DateRange)
-      self.begin.after?(date)
+      self.begin.present? && self.begin.after?(date)
     end
 
     # Returns the granularity of the range. Returns either <tt>:year</tt>, <tt>:quarter</tt> or
@@ -255,7 +263,7 @@ module ActiveDateRange
         relative_param
       else
         format = full_month? ? "%Y%m" : "%Y%m%d"
-        "#{self.begin.strftime(format)}..#{self.end.strftime(format)}"
+        "#{self.begin&.strftime(format)}..#{self.end&.strftime(format)}"
       end
     end
 
@@ -274,6 +282,8 @@ module ActiveDateRange
     #   DateRange.this_month.previous # => DateRange.prev_month
     #   DateRange.this_month.previous(2) # => DateRange.prev_month.previous + DateRange.prev_month
     def previous(periods = 1)
+      raise BoundlessRangeError, "Can't calculate previous for boundless range" if boundless?
+
       begin_date = if granularity
         self.begin - periods.send(granularity)
       elsif full_month?
@@ -293,6 +303,8 @@ module ActiveDateRange
     #   DateRange.this_month.next # => DateRange.next_month
     #   DateRange.this_month.next(2) # => DateRange.next_month + DateRange.next_month.next
     def next(periods = 1)
+      raise BoundlessRangeError, "Can't calculate next for boundless range" if boundless?
+
       end_date = self.end + (granularity ? periods.send(granularity) : days.days)
       end_date = end_date.at_end_of_month if full_month?
 
@@ -310,17 +322,30 @@ module ActiveDateRange
     #   DateRange.parse("202101..202103").in_groups_of(:month) # => [DateRange.parse("202001..202001"), DateRange.parse("202002..202002"), DateRange.parse("202003..202003")]
     #   DateRange.parse("202101..202106").in_groups_of(:month, amount: 2) # => [DateRange.parse("202001..202002"), DateRange.parse("202003..202004"), DateRange.parse("202005..202006")]
     def in_groups_of(granularity, amount: 1)
-      raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
+      raise BoundlessRangeError, "Can't group date range without a begin." if self.begin.nil?
 
-      group_by { |d| [d.year, d.send(granularity)] }
-        .map { |_, group| DateRange.new(group.first..group.last) }
-        .in_groups_of(amount)
-        .map { |group| group.inject(:+) }
+      if boundless?
+        grouped_collection(granularity, amount: amount)
+      else
+        grouped_collection(granularity, amount: amount).to_a
+      end
     end
 
     # Returns a human readable format for the date range. See DateRange::Humanizer for options.
     def humanize(format: :short)
       Humanizer.new(self, format: format).humanize
     end
+
+    private
+      def grouped_collection(granularity, amount: 1)
+        raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
+
+        lazy
+          .chunk { |d| [d.year, d.send(granularity)] }
+          .map { |_, group| DateRange.new(group.first..group.last) }
+          .with_index
+          .slice_before { |_, index| index % amount == 0 }
+          .map { |group| group.map(&:first).inject(:+) }
+      end
   end
 end
