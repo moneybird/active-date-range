@@ -1,3 +1,12 @@
+* Add intersection support:
+
+  ```
+  date_range.intersection(other_date_range) # => DateRange
+  ```
+
+  *Edwin Vlieg*
+
+
 * Add support for boundless ranges:
 
   ```

@@ -64,6 +64,7 @@ module ActiveDateRange
     # Make sures the begin date is before the end date.
     def initialize(begin_date, end_date = nil)
       begin_date, end_date = begin_date.begin, begin_date.end if begin_date.kind_of?(Range)
+      begin_date, end_date = begin_date.first, begin_date.last if begin_date.kind_of?(Array)
       begin_date = begin_date.to_date if begin_date.kind_of?(Time)
       end_date = end_date.to_date if end_date.kind_of?(Time)
 
@@ -334,6 +335,12 @@ module ActiveDateRange
     # Returns a human readable format for the date range. See DateRange::Humanizer for options.
     def humanize(format: :short)
       Humanizer.new(self, format: format).humanize
+    end
+
+    # Returns the intersection of the current and the other date range
+    def intersection(other)
+      intersection = self.to_a.intersection(other.to_a).sort
+      DateRange.new(intersection) if intersection.any?
     end
 
     private

@@ -19,6 +19,10 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_kind_of Range, described_class.new(Date.new(2021, 1, 1)..Date.new(2021, 12, 31))
   end
 
+  def test_initialize_array
+    assert_kind_of Range, described_class.new([Date.new(2021, 1, 1), Date.new(2021, 12, 31)])
+  end
+
   def test_initialize_no_dates
     assert_raises(ActiveDateRange::InvalidDateRange) { described_class.new(1, 2) }
     assert_raises(ActiveDateRange::InvalidDateRange) { described_class.new(Date.new(2021, 1, 1), 2) }
@@ -381,6 +385,15 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
   def test_humanize
     assert_equal "Q1 2021", described_class.parse("202101..202103").humanize
     assert_equal "quarter 1 2021", described_class.parse("202101..202103").humanize(format: :long)
+  end
+
+  def test_intersection
+    assert_equal described_class.parse("202103..202104"), described_class.parse("202101..202104").intersection(described_class.parse("202103..202107"))
+    assert_equal described_class.parse("202103..202104"), described_class.parse("202101..202110").intersection(described_class.parse("202103..202104"))
+    assert_equal described_class.parse("202103..202104"), described_class.parse("202103..202107").intersection(described_class.parse("202101..202104"))
+    assert_equal described_class.parse("20210401..20210406"), described_class.parse("202101..20210406").intersection(described_class.parse("20210401..202107"))
+    assert_nil described_class.parse("202101..202104").intersection(described_class.parse("202105..202107"))
+    assert_nil described_class.parse("202105..202107").intersection(described_class.parse("202101..202104"))
   end
 
   def test_boundless

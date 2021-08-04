@@ -93,6 +93,7 @@ date_range.previous(2)                          # => DateRange.parse('201901..20
 date_range.next                                 # => DateRange.parse('202201..202212')
 date_range + DateRange.parse('202201..202202')  # => DateRange.parse('202101..202202')
 date_range.in_groups_of(:month)                 # => [DateRange.parse('202101..202101'), ..., DateRange.parse('202112..202112')]
+date_range.intersection(DateRange.parse('202101..202102')) # => DateRange.parse('202101..202102')
 ```
 
 Support for boundless ranges is also available:
