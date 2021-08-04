@@ -395,7 +395,7 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_nil described_class.parse("202101..202104").intersection(described_class.parse("202105..202107"))
     assert_nil described_class.parse("202105..202107").intersection(described_class.parse("202101..202104"))
   end
- 
+
   def test_boundless
     boundless = described_class.new(Date.new(2021, 1, 1), nil)
 
