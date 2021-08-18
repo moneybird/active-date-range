@@ -3,6 +3,7 @@
 
 require "bundler/setup"
 require "active_support"
+require "active_model"
 require "active_date_range"
 
 Time.zone = "UTC"
