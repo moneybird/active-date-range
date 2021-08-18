@@ -1,3 +1,9 @@
+## 0.3.0
+
+* `include?` now behaves like `cover?` for better performance
+
+  *Edwin Vlieg*
+
 * Add intersection support:
 
   ```
