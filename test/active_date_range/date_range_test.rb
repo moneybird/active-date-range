@@ -444,4 +444,13 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_raises(ActiveDateRange::BoundlessRangeError) { boundless.next }
     assert_raises(ActiveDateRange::BoundlessRangeError) { boundless.previous }
   end
+
+  def test_include
+    assert described_class.this_year.include?(Date.current)
+    assert described_class.this_year.include?(Date.current.at_beginning_of_year)
+    assert described_class.this_year.include?(Date.current.at_end_of_year)
+    assert_not described_class.prev_year.include?(Date.current)
+    assert_not described_class.this_year.include?(Date.current.at_beginning_of_year - 1.day)
+    assert_not described_class.this_year.include?(Date.current.at_end_of_year + 1.day)
+  end
 end

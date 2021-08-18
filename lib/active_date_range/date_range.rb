@@ -343,6 +343,10 @@ module ActiveDateRange
       DateRange.new(intersection) if intersection.any?
     end
 
+    def include?(other)
+      cover?(other)
+    end
+
     private
       def grouped_collection(granularity, amount: 1)
         raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)
