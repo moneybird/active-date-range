@@ -2,40 +2,39 @@ PATH
   remote: .
   specs:
     active_date_range (0.3.0)
-      activesupport (~> 6.1)
+      activesupport (> 6.1)
       i18n
 
 GEM
   remote: https://rubygems.org/
   specs:
-    actionpack (6.1.4.1)
-      actionview (= 6.1.4.1)
-      activesupport (= 6.1.4.1)
-      rack (~> 2.0, >= 2.0.9)
+    actionpack (7.0.0.alpha2)
+      actionview (= 7.0.0.alpha2)
+      activesupport (= 7.0.0.alpha2)
+      rack (~> 2.0, >= 2.2.0)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (6.1.4.1)
-      activesupport (= 6.1.4.1)
+    actionview (7.0.0.alpha2)
+      activesupport (= 7.0.0.alpha2)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    activemodel (6.1.4.1)
-      activesupport (= 6.1.4.1)
-    activesupport (6.1.4.1)
+    activemodel (7.0.0.alpha2)
+      activesupport (= 7.0.0.alpha2)
+    activesupport (7.0.0.alpha2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-      zeitwerk (~> 2.3)
     ast (2.4.2)
     builder (3.2.4)
     coderay (1.1.3)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
     erubi (1.10.0)
-    ffi (1.15.3)
+    ffi (1.15.4)
     formatador (0.3.0)
     guard (2.18.0)
       formatador (>= 0.2.4)
@@ -60,16 +59,14 @@ GEM
       nokogiri (>= 1.5.9)
     lumberjack (1.2.8)
     method_source (1.0.0)
-    mini_portile2 (2.6.1)
     minitest (5.14.4)
     nenv (0.3.0)
-    nokogiri (1.12.3)
-      mini_portile2 (~> 2.6.1)
+    nokogiri (1.12.4-x86_64-linux)
       racc (~> 1.4)
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    parallel (1.20.1)
+    parallel (1.21.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
     pry (0.14.1)
@@ -84,12 +81,13 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.2)
       loofah (~> 2.3)
-    railties (6.1.4.1)
-      actionpack (= 6.1.4.1)
-      activesupport (= 6.1.4.1)
+    railties (7.0.0.alpha2)
+      actionpack (= 7.0.0.alpha2)
+      activesupport (= 7.0.0.alpha2)
       method_source
       rake (>= 0.13)
       thor (~> 1.0)
+      zeitwerk (~> 2.5.0.beta3)
     rainbow (3.0.0)
     rake (12.3.3)
     rb-fsevent (0.11.0)
@@ -97,7 +95,7 @@ GEM
       ffi (~> 1.0)
     regexp_parser (2.1.1)
     rexml (3.2.5)
-    rubocop (1.20.0)
+    rubocop (1.21.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -113,7 +111,7 @@ GEM
     rubocop-performance (1.11.5)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.11.3)
+    rubocop-rails (2.12.2)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.7.0, < 2.0)
@@ -122,11 +120,11 @@ GEM
     thor (1.1.0)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.0.0)
-    zeitwerk (2.4.2)
+    unicode-display_width (2.1.0)
+    zeitwerk (2.5.0.beta3)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   active_date_range!
@@ -135,7 +133,7 @@ DEPENDENCIES
   guard-minitest
   minitest (~> 5.0)
   pry
-  railties (~> 6.1)
+  railties (> 6.1)
   rake (~> 12.0)
   rubocop
   rubocop-packaging
