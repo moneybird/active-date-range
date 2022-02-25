@@ -306,7 +306,13 @@ module ActiveDateRange
     def next(periods = 1)
       raise BoundlessRangeError, "Can't calculate next for boundless range" if boundless?
 
-      end_date = self.end + (granularity ? periods.send(granularity) : days.days)
+      end_date = if granularity
+        self.end + periods.send(granularity)
+      elsif full_month?
+        in_groups_of(:month).last.next(periods * months).end
+      else
+        self.end + (periods * days).days
+      end
       end_date = end_date.at_end_of_month if full_month?
 
       DateRange.new(self.end + 1.day, end_date)
