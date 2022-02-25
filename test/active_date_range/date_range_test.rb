@@ -238,6 +238,8 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal described_class.parse("201403..201502"), described_class.parse("201303..201402").next
     assert_equal described_class.parse("201510..201612"), described_class.parse("201407..201509").next
     assert_equal described_class.parse("201407..201509").months, described_class.parse("201407..201509").next.months
+    assert_equal described_class.parse("202301..202412"), described_class.parse("202101..202212").next
+    assert_equal described_class.parse("202501..202612"), described_class.parse("202301..202412").next
     assert_equal described_class.next_week, described_class.this_week.next
   end
 
