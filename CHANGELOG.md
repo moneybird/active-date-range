@@ -1,3 +1,9 @@
+## 0.3.1
+
+* Fix issue with `next` not returning a full year when leap years are in the range
+
+  *Edwin Vlieg*
+
 ## 0.3.0
 
 * `include?` now behaves like `cover?` for better performance
