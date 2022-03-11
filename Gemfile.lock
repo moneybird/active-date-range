@@ -59,6 +59,7 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.2.8)
+    memory_profiler (1.0.0)
     method_source (1.0.0)
     mini_portile2 (2.8.0)
     minitest (5.15.0)
@@ -138,6 +139,7 @@ DEPENDENCIES
   benchmark-ips
   guard
   guard-minitest
+  memory_profiler
   minitest (~> 5.0)
   pry
   railties (> 6.1)

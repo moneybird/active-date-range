@@ -128,35 +128,35 @@ module ActiveDateRange
 
     # Returns true when begin of the range is at the beginning of the month
     def begin_at_beginning_of_month?
-      memoize(:begin_at_beginning_of_month) do
+      memoize(:@begin_at_beginning_of_month) do
         self.begin.present? && self.begin.day == 1
       end
     end
 
     # Returns true when begin of the range is at the beginning of the quarter
     def begin_at_beginning_of_quarter?
-      memoize(:begin_at_beginning_of_quarter) do
+      memoize(:@begin_at_beginning_of_quarter) do
         self.begin.present? && begin_at_beginning_of_month? && [1, 4, 7, 10].include?(self.begin.month)
       end
     end
 
     # Returns true when begin of the range is at the beginning of the year
     def begin_at_beginning_of_year?
-      memoize(:begin_at_beginning_of_year) do
+      memoize(:@begin_at_beginning_of_year) do
         self.begin.present? && begin_at_beginning_of_month? && self.begin.month == 1
       end
     end
 
     # Returns true when begin of the range is at the beginning of the week
     def begin_at_beginning_of_week?
-      memoize(:begin_at_beginning_of_week) do
+      memoize(:@begin_at_beginning_of_week) do
         self.begin.present? && self.begin == self.begin.at_beginning_of_week
       end
     end
 
     # Returns true when the range is exactly one month long
     def one_month?
-      memoize(:one_month) do
+      memoize(:@one_month) do
         (28..31).cover?(days) &&
           begin_at_beginning_of_month? &&
           self.end == self.begin.at_end_of_month
@@ -165,7 +165,7 @@ module ActiveDateRange
 
     # Returns true when the range is exactly one quarter long
     def one_quarter?
-      memoize(:one_quarter) do
+      memoize(:@one_quarter) do
         (90..92).cover?(days) &&
           begin_at_beginning_of_quarter? &&
           self.end == self.begin.at_end_of_quarter
@@ -174,7 +174,7 @@ module ActiveDateRange
 
     # Returns true when the range is exactly one year long
     def one_year?
-      memoize(:one_year) do
+      memoize(:@one_year) do
         (365..366).cover?(days) &&
           begin_at_beginning_of_year? &&
           self.end == self.begin.at_end_of_year
@@ -182,7 +182,7 @@ module ActiveDateRange
     end
 
     def one_week?
-      memoize(:one_week) do
+      memoize(:@one_week) do
         days == 7 &&
           begin_at_beginning_of_week? &&
           self.end == self.begin.at_end_of_week
@@ -191,7 +191,7 @@ module ActiveDateRange
 
     # Returns true when the range is exactly one or more months long
     def full_month?
-      memoize(:full_month) do
+      memoize(:@full_month) do
         begin_at_beginning_of_month? && self.end.present? && self.end == self.end.at_end_of_month
       end
     end
@@ -200,7 +200,7 @@ module ActiveDateRange
 
     # Returns true when the range is exactly one or more quarters long
     def full_quarter?
-      memoize(:full_quarter) do
+      memoize(:@full_quarter) do
         begin_at_beginning_of_quarter? && self.end.present? && self.end == self.end.at_end_of_quarter
       end
     end
@@ -209,7 +209,7 @@ module ActiveDateRange
 
     # Returns true when the range is exactly one or more years long
     def full_year?
-      memoize(:full_year) do
+      memoize(:@full_year) do
         begin_at_beginning_of_year? && self.end.present? && self.end == self.end.at_end_of_year
       end
     end
@@ -218,7 +218,7 @@ module ActiveDateRange
 
     # Returns true when the range is exactly one or more weeks long
     def full_week?
-      memoize(:full_week) do
+      memoize(:@full_week) do
         begin_at_beginning_of_week? && self.end.present? && self.end == self.end.at_end_of_week
       end
     end
@@ -227,7 +227,7 @@ module ActiveDateRange
 
     # Returns true when begin and end are in the same year
     def same_year?
-      memoize(:same_year) do
+      memoize(:@same_year) do
         !boundless? && self.begin.year == self.end.year
       end
     end
@@ -253,7 +253,7 @@ module ActiveDateRange
     #   DateRange.this_quarter.granularity  # => :quarter
     #   DateRange.this_year.granularity     # => :year
     def granularity
-      memoize(:granularity) do
+      memoize(:@granularity) do
         if one_year?
           :year
         elsif one_quarter?
@@ -270,7 +270,7 @@ module ActiveDateRange
     # a range of 2021-01-01..2021-12-31 will return `this_year` when the current date
     # is somewhere in 2021.
     def relative_param
-      memoize(:relative_param) do
+      memoize(:@relative_param) do
         SHORTHANDS
           .select { |key, _| key.end_with?(granularity.to_s) }
           .find { |key, range| self == range.call }
@@ -396,10 +396,10 @@ module ActiveDateRange
       end
 
       def memoize(name)
-        if instance_variable_defined?(:"@#{name}")
-          instance_variable_get(:"@#{name}")
+        if instance_variable_defined?(name)
+          instance_variable_get(name)
         else
-          instance_variable_set(:"@#{name}", yield)
+          instance_variable_set(name, yield)
         end
       end
   end
