@@ -193,6 +193,24 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_not described_class.parse("202001..202112").same_year?
   end
 
+  def test_this_month
+    assert described_class.this_month.this_month?
+    assert_not described_class.prev_month.this_month?
+    assert_not described_class.next_month.this_month?
+  end
+
+  def test_this_quarter
+    assert described_class.this_quarter.this_quarter?
+    assert_not described_class.prev_quarter.this_quarter?
+    assert_not described_class.next_quarter.this_quarter?
+  end
+
+  def test_this_year
+    assert described_class.this_year.this_year?
+    assert_not described_class.prev_year.this_year?
+    assert_not described_class.next_year.this_year?
+  end
+
   def test_to_param
     assert_equal "202001..202001", described_class.parse("202001..202001").to_param
     assert_equal "202001..202012", described_class.parse("202001..202012").to_param(relative: false)

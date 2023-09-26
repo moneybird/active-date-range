@@ -1,3 +1,10 @@
+## 0.3.2
+
+* Add this_month?, this_quarter? and this_year? to check if a period is the current month, quarter or year
+
+  *Edwin Vlieg*
+
+
 ## 0.3.1
 
 * Fix issue with `next` not returning a full year when leap years are in the range

@@ -232,6 +232,27 @@ module ActiveDateRange
       end
     end
 
+    # Return true when the range is equal to the current month
+    def this_month?
+      memoize(:@this_month) do
+        self == DateRange.this_month
+      end
+    end
+
+    # Return true when the range is equal to the current quarter
+    def this_quarter?
+      memoize(:@this_quarter) do
+        self == DateRange.this_quarter
+      end
+    end
+
+    # Return true when the range is equal to the current year
+    def this_year?
+      memoize(:@this_year) do
+        self == DateRange.this_year
+      end
+    end
+
     # Returns true when the date range is before the given date. Accepts both a <tt>Date</tt>
     # and <tt>DateRange</tt> as input.
     def before?(date)
