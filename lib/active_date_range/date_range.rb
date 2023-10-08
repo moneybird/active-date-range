@@ -232,26 +232,15 @@ module ActiveDateRange
       end
     end
 
-    # Return true when the range is equal to the current month
-    def this_month?
-      memoize(:@this_month) do
-        self == DateRange.this_month
+    def current?
+      memoize(:@current) do
+        cover?(Time.zone.today)
       end
     end
 
-    # Return true when the range is equal to the current quarter
-    def this_quarter?
-      memoize(:@this_quarter) do
-        self == DateRange.this_quarter
-      end
-    end
-
-    # Return true when the range is equal to the current year
-    def this_year?
-      memoize(:@this_year) do
-        self == DateRange.this_year
-      end
-    end
+    alias :this_month? :current?
+    alias :this_quarter? :current?
+    alias :this_year? :current?
 
     # Returns true when the date range is before the given date. Accepts both a <tt>Date</tt>
     # and <tt>DateRange</tt> as input.
