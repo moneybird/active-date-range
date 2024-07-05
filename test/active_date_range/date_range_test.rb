@@ -23,6 +23,13 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_kind_of Range, described_class.new([Date.new(2021, 1, 1), Date.new(2021, 12, 31)])
   end
 
+  def test_date_and_duration
+    assert_equal described_class.new(Date.new(2021, 1, 1), Date.new(2021, 1, 15)), described_class.from_date_and_duration(Date.new(2021, 1, 1), 15)
+    assert_equal described_class.new(Date.new(2021, 1, 1), Date.new(2021, 1, 31)), described_class.from_date_and_duration(Date.new(2021, 1, 1), :month)
+    assert_equal described_class.new(Date.new(2021, 1, 1), Date.new(2021, 3, 31)), described_class.from_date_and_duration(Date.new(2021, 1, 1), :quarter)
+    assert_equal described_class.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31)), described_class.from_date_and_duration(Date.new(2021, 1, 1), :year)
+  end
+
   def test_initialize_no_dates
     assert_raises(ActiveDateRange::InvalidDateRange) { described_class.new(1, 2) }
     assert_raises(ActiveDateRange::InvalidDateRange) { described_class.new(Date.new(2021, 1, 1), 2) }

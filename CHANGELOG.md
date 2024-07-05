@@ -4,6 +4,14 @@
 
   *Edwin Vlieg*
 
+* Add .from_date_and_duration:
+
+  ```
+  DateRange.from_date_and_duration(Date.new(2023, 1, 1), :month) # => Range
+  ```
+
+  *Edwin Vlieg*
+
 ## 0.3.2
 
 * Add this_month?, this_quarter? and this_year? to check if a period is the current month, quarter or year

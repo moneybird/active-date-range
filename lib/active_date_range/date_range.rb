@@ -58,6 +58,11 @@ module ActiveDateRange
       raise InvalidDateRangeFormat
     end
 
+    def self.from_date_and_duration(date, duration)
+      duration = 1.send(duration) if duration.kind_of?(Symbol)
+      new(date, date + duration - 1.day)
+    end
+
     private_class_method :parse_date
 
     # Initializes a new DateRange. Accepts both a begin and end date or a range of dates.
