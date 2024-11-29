@@ -31,6 +31,7 @@ module ActiveDateRange
     # - A begin and end date: <tt>YYYYMMDD..YYYYMMDD</tt>
     # - A begin and end month: <tt>YYYYMM..YYYYMM</tt>
     def self.parse(input)
+      return nil if input.nil?
       return DateRange.new(input) if input.kind_of?(Range)
       return SHORTHANDS[input.to_sym].call if SHORTHANDS.key?(input.to_sym)
 
