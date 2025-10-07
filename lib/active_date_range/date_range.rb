@@ -407,6 +407,10 @@ module ActiveDateRange
       DateRange.new(self.begin, side_to_stretch.at_end_of_month)
     end
 
+    def exceeds?(limit)
+      self.days > limit.in_days.ceil
+    end
+
     private
       def grouped_collection(granularity, amount: 1)
         raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)

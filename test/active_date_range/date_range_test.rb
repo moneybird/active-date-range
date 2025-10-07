@@ -499,4 +499,10 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal described_class.parse("202101..202101"), described_class.parse("20210101..20210115").stretch_to_end_of_month
     assert_equal described_class.parse("202101..202103"), described_class.parse("20210101..20210301").stretch_to_end_of_month
   end
+
+  def test_exceeds?
+    assert described_class.parse("202101..202101").exceeds?(1.week)
+    assert described_class.parse("202101..202106").exceeds?(3.months)
+    assert_not described_class.parse("202101..202101").exceeds?(1.month)
+  end
 end

@@ -9,6 +9,18 @@ DateRange.parse("20250101..20250112).stretch_to_end_of_month
 
   *Vincent Oord*
 
+* Add exceeds? to check if the period does not exceed a given limit.
+
+```
+DateRange.parse("202501..202503).exceeds?(1.month)
+# => true
+
+DateRange.parse("20250101..20250105).exceeds?(1.week)
+# => false
+```
+
+  *Vincent Oord*
+
 * Update to Ruby 3.4.6 compatibility
 
   *Vincent Oord*
