@@ -1,3 +1,9 @@
+## 0.4.0
+
+* Update to Ruby 3.4.6 compatibility
+
+  *Vincent Oord*
+
 ## 0.3.3
 
 * Add current? to check if the period containts the current date.
