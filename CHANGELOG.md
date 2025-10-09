@@ -1,3 +1,9 @@
+## 0.4.1
+
+* Fix dependency issues in gemspec
+
+  *Vincent Oord*
+
 ## 0.4.0
 
 * Add #stretch_to_end_of_month:
