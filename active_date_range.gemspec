@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "DateRange for ActiveSupport"
   spec.description   = "ActiveDateRange provides a range of dates with a powerful API to manipulate and use date ranges in your software."
   spec.homepage      = "https://github.com/moneybird/active-date-range"
+  spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 3.2.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
@@ -26,12 +27,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activesupport", "> 6.1"
-  spec.add_dependency "i18n"
+  spec.add_runtime_dependency "activesupport", "~> 8.0"
+  spec.add_runtime_dependency "i18n", "~> 1.6"
 
-  spec.add_development_dependency "rubocop"
-  spec.add_development_dependency "rubocop-packaging"
-  spec.add_development_dependency "rubocop-performance"
-  spec.add_development_dependency "rubocop-rails"
-  spec.add_development_dependency "activemodel"
+  spec.add_development_dependency "rubocop", "~> 1.18"
+  spec.add_development_dependency "rubocop-packaging", "~> 0.6"
+  spec.add_development_dependency "rubocop-performance", "~> 1.26"
+  spec.add_development_dependency "rubocop-rails", "~> 2.33"
+  spec.add_development_dependency "activemodel", "~> 8.0"
 end
