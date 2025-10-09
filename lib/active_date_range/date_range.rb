@@ -399,6 +399,14 @@ module ActiveDateRange
       cover?(other)
     end
 
+    def stretch_to_end_of_month
+      return self if self.end.present? && self.end == self.end.at_end_of_month
+
+      side_to_stretch = boundless? ? self.begin : self.end
+
+      DateRange.new(self.begin, side_to_stretch.at_end_of_month)
+    end
+
     private
       def grouped_collection(granularity, amount: 1)
         raise UnknownGranularity, "Unknown granularity #{granularity}. Valid are: month, quarter and year" unless %w[month quarter year].include?(granularity.to_s)

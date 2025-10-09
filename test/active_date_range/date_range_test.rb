@@ -492,4 +492,11 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_not described_class.this_year.include?(Date.current.at_beginning_of_year - 1.day)
     assert_not described_class.this_year.include?(Date.current.at_end_of_year + 1.day)
   end
+
+  def test_stretch_to_end_of_month
+    assert_equal described_class.parse("202101..202101"), described_class.parse("202101..202101").stretch_to_end_of_month
+    assert_equal described_class.parse("202101..202101"), described_class.parse("202101..").stretch_to_end_of_month
+    assert_equal described_class.parse("202101..202101"), described_class.parse("20210101..20210115").stretch_to_end_of_month
+    assert_equal described_class.parse("202101..202103"), described_class.parse("20210101..20210301").stretch_to_end_of_month
+  end
 end

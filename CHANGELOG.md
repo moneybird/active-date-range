@@ -1,5 +1,14 @@
 ## 0.4.0
 
+* Add #stretch_to_end_of_month:
+
+```
+DateRange.parse("20250101..20250112).stretch_to_end_of_month
+# => "20250101..20250131"
+```
+
+  *Vincent Oord*
+
 * Update to Ruby 3.4.6 compatibility
 
   *Vincent Oord*
