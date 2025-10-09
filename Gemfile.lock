@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     active_date_range (0.4.0)
-      activesupport (> 6.1)
-      i18n
+      activesupport (~> 8.0)
+      i18n (~> 1.6)
 
 GEM
   remote: https://rubygems.org/
@@ -203,7 +203,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_date_range!
-  activemodel
+  activemodel (~> 8.0)
   benchmark-ips
   guard
   guard-minitest
@@ -212,10 +212,10 @@ DEPENDENCIES
   pry
   railties (> 6.1)
   rake (~> 13.0)
-  rubocop
-  rubocop-packaging
-  rubocop-performance
-  rubocop-rails
+  rubocop (~> 1.18)
+  rubocop-packaging (~> 0.6)
+  rubocop-performance (~> 1.26)
+  rubocop-rails (~> 2.33)
 
 BUNDLED WITH
    2.3.5
