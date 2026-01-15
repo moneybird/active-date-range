@@ -55,6 +55,46 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 1.week.from_now.to_date.all_week, described_class.next_week
   end
 
+  def test_year
+    range = described_class.year(2026)
+    assert_equal Date.new(2026, 1, 1), range.begin
+    assert_equal Date.new(2026, 12, 31), range.end
+    assert range.one_year?
+  end
+
+  def test_month
+    range = described_class.month(2026, 1)
+    assert_equal Date.new(2026, 1, 1), range.begin
+    assert_equal Date.new(2026, 1, 31), range.end
+    assert range.one_month?
+
+    range = described_class.month(2024, 2)
+    assert_equal Date.new(2024, 2, 1), range.begin
+    assert_equal Date.new(2024, 2, 29), range.end
+  end
+
+  def test_quarter
+    range = described_class.quarter(2026, 1)
+    assert_equal Date.new(2026, 1, 1), range.begin
+    assert_equal Date.new(2026, 3, 31), range.end
+    assert range.one_quarter?
+
+    range = described_class.quarter(2026, 4)
+    assert_equal Date.new(2026, 10, 1), range.begin
+    assert_equal Date.new(2026, 12, 31), range.end
+  end
+
+  def test_week
+    range = described_class.week(2026, 1)
+    assert_equal Date.new(2025, 12, 29), range.begin
+    assert_equal Date.new(2026, 1, 4), range.end
+    assert range.one_week?
+
+    range = described_class.week(2026, 10)
+    assert_equal Date.new(2026, 3, 2), range.begin
+    assert_equal Date.new(2026, 3, 8), range.end
+  end
+
   def test_parse
     assert_equal described_class.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31)), described_class.parse(Date.new(2021, 1, 1)..Date.new(2021, 12, 31))
     assert_equal described_class.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31)), described_class.parse(Date.new(2021, 1, 1)..Date.new(2021, 12, 31))

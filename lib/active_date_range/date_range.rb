@@ -64,6 +64,36 @@ module ActiveDateRange
       new(date, date + duration - 1.day)
     end
 
+    # Creates a DateRange for a full year.
+    #
+    #   DateRange.year(2026) # => DateRange(2026-01-01..2026-12-31)
+    def self.year(year)
+      new(Date.new(year, 1, 1).all_year)
+    end
+
+    # Creates a DateRange for a specific month.
+    #
+    #   DateRange.month(2026, 1) # => DateRange(2026-01-01..2026-01-31)
+    def self.month(year, month)
+      new(Date.new(year, month, 1).all_month)
+    end
+
+    # Creates a DateRange for a specific quarter (1-4).
+    #
+    #   DateRange.quarter(2026, 4) # => DateRange(2026-10-01..2026-12-31)
+    def self.quarter(year, quarter)
+      month = ((quarter - 1) * 3) + 1
+      new(Date.new(year, month, 1).all_quarter)
+    end
+
+    # Creates a DateRange for a specific ISO week.
+    #
+    #   DateRange.week(2026, 1) # => DateRange for ISO week 1 of 2026
+    def self.week(year, week)
+      date = Date.commercial(year, week, 1)
+      new(date.all_week)
+    end
+
     private_class_method :parse_date
 
     # Initializes a new DateRange. Accepts both a begin and end date or a range of dates.
