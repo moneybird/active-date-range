@@ -1,3 +1,16 @@
+## 0.4.2
+
+* Add shorthand class methods for creating DateRanges:
+
+```ruby
+DateRange.year(2026)       # => DateRange(2026-01-01..2026-12-31)
+DateRange.quarter(2026, 4) # => DateRange(2026-10-01..2026-12-31)
+DateRange.month(2026, 1)   # => DateRange(2026-01-01..2026-01-31)
+DateRange.week(2026, 1)    # => DateRange for ISO week 1 of 2026
+```
+
+  *Edwin Vlieg*
+
 ## 0.4.1
 
 * Fix dependency issues in gemspec
