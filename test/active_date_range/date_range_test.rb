@@ -545,4 +545,55 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert described_class.parse("202101..202106").exceeds?(3.months)
     assert_not described_class.parse("202101..202101").exceeds?(1.month)
   end
+
+  def test_size
+    assert_equal 31.days, described_class.parse("202101..202101").size
+    assert_equal 365.days, described_class.parse("202101..202112").size
+    assert_equal 1.day, described_class.parse("20210101..20210101").size
+    assert_equal 7.days, described_class.parse("this_week").size
+    assert_nil described_class.new(Date.new(2021, 1, 1), nil).size
+  end
+
+  def test_size_validates_length_of_compatibility
+    assert described_class.parse("202101..202112").size <= 1.year
+    assert described_class.parse("202101..202112").size <= 2.years
+    assert_not described_class.parse("202101..202212").size <= 1.year
+    assert described_class.parse("202101..202101").size <= 6.months
+    assert_not described_class.parse("202101..202112").size <= 6.months
+  end
+
+  def test_length
+    assert_equal 31.days, described_class.parse("202101..202101").length
+    assert_equal described_class.parse("202101..202101").size, described_class.parse("202101..202101").length
+  end
+
+  def test_cap_end
+    range = described_class.parse("202101..202512")
+    capped = range.cap_end(2.years)
+    assert_equal Date.new(2021, 1, 1), capped.begin
+    assert_equal Date.new(2022, 12, 31), capped.end
+
+    # Returns self when range does not exceed the limit
+    range = described_class.parse("202101..202112")
+    assert_equal range, range.cap_end(2.years)
+
+    # Returns self for boundless ranges
+    boundless = described_class.new(Date.new(2021, 1, 1), nil)
+    assert_equal boundless, boundless.cap_end(2.years)
+  end
+
+  def test_cap_begin
+    range = described_class.parse("202101..202512")
+    capped = range.cap_begin(2.years)
+    assert_equal Date.new(2024, 1, 1), capped.begin
+    assert_equal Date.new(2025, 12, 31), capped.end
+
+    # Returns self when range does not exceed the limit
+    range = described_class.parse("202101..202112")
+    assert_equal range, range.cap_begin(2.years)
+
+    # Returns self for boundless ranges
+    boundless = described_class.new(Date.new(2021, 1, 1), nil)
+    assert_equal boundless, boundless.cap_begin(2.years)
+  end
 end
