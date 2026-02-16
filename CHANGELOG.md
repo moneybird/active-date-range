@@ -1,3 +1,25 @@
+## 0.5.0
+
+* Add `size` and `length` methods that return an `ActiveSupport::Duration`, compatible with `validates_length_of`:
+
+```ruby
+validates_length_of :period, maximum: 10.years
+```
+
+  *Edwin Vlieg*
+
+* Add `cap_end` and `cap_begin` to limit a range to a given duration:
+
+```ruby
+DateRange.parse("202101..202512").cap_end(2.years)
+# => DateRange(2021-01-01..2022-12-31)
+
+DateRange.parse("202101..202512").cap_begin(2.years)
+# => DateRange(2024-01-01..2025-12-31)
+```
+
+  *Edwin Vlieg*
+
 ## 0.4.2
 
 * Add shorthand class methods for creating DateRanges:

@@ -134,6 +134,18 @@ module ActiveDateRange
       @days ||= (self.end - self.begin).to_i + 1
     end
 
+    # Returns the duration of the range as an ActiveSupport::Duration, compatible with
+    # validates_length_of. Use Duration values for the constraint:
+    #
+    #   validates_length_of :period, maximum: 10.years
+    #   validates_length_of :period, maximum: 6.months
+    #   validates_length_of :period, maximum: 30.days
+    def size
+      days&.days
+    end
+
+    alias :length :size
+
     # Returns the number of months in the range or nil when range is no full month
     def months
       return nil unless full_month?
@@ -439,6 +451,24 @@ module ActiveDateRange
 
     def exceeds?(limit)
       self.days > limit.in_days.ceil
+    end
+
+    # Returns a new DateRange with the end date capped to the given duration from the begin date.
+    #
+    #   DateRange.parse("202101..202512").cap_end(2.years) # => DateRange(2021-01-01..2022-12-31)
+    def cap_end(duration)
+      return self if boundless? || !exceeds?(duration)
+
+      DateRange.new(self.begin, self.begin + duration - 1.day)
+    end
+
+    # Returns a new DateRange with the begin date capped to the given duration from the end date.
+    #
+    #   DateRange.parse("202101..202512").cap_begin(2.years) # => DateRange(2024-01-01..2025-12-31)
+    def cap_begin(duration)
+      return self if boundless? || !exceeds?(duration)
+
+      DateRange.new(self.end - duration + 1.day, self.end)
     end
 
     private
