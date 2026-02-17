@@ -551,7 +551,8 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_equal 365.days, described_class.parse("202101..202112").size
     assert_equal 1.day, described_class.parse("20210101..20210101").size
     assert_equal 7.days, described_class.parse("this_week").size
-    assert_nil described_class.new(Date.new(2021, 1, 1), nil).size
+    assert_equal Float::INFINITY, described_class.new(Date.new(2021, 1, 1), nil).size
+    assert_equal Float::INFINITY, described_class.new(nil, Date.new(2021, 1, 1)).size
   end
 
   def test_size_validates_length_of_compatibility
@@ -560,6 +561,7 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     assert_not described_class.parse("202101..202212").size <= 1.year
     assert described_class.parse("202101..202101").size <= 6.months
     assert_not described_class.parse("202101..202112").size <= 6.months
+    assert_not described_class.new(Date.new(2021, 1, 1), nil).size <= 1.year
   end
 
   def test_length

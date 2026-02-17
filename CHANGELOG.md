@@ -1,3 +1,9 @@
+## 0.5.1
+
+* Return `Float::INFINITY` from `size` for boundless ranges, making `validates_length_of` correctly reject them.
+
+  *Edwin Vlieg*
+
 ## 0.5.0
 
 * Add `size` and `length` methods that return an `ActiveSupport::Duration`, compatible with `validates_length_of`:

@@ -141,7 +141,9 @@ module ActiveDateRange
     #   validates_length_of :period, maximum: 6.months
     #   validates_length_of :period, maximum: 30.days
     def size
-      days&.days
+      return Float::INFINITY if boundless?
+
+      days.days
     end
 
     alias :length :size
