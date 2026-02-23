@@ -39,3 +39,14 @@ en:
     long_quarter: "quarter %{quarter}"
     short_quarter: "Q%{quarter}"
     range: "%{begin} - %{end}"
+  errors:
+    messages:
+      not_a_date_range: "is not a valid date range"
+      unbounded: "must have both a start and end date"
+      duration_too_short: "is too short (minimum duration is %{duration})"
+      duration_too_long: "is too long (maximum duration is %{duration})"
+      wrong_duration: "has the wrong duration (should be %{duration})"
+      not_full_periods: "must consist of full %{period}s"
+      misaligned_start: "must start at the %{alignment}"
+      misaligned_end: "must end at the %{alignment}"
+      does_not_cover: "must include %{date}"

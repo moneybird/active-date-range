@@ -1,3 +1,21 @@
+## 0.5.2
+
+* Add calendar-aware `DateRangeValidator` for ActiveModel validations. Unlike `validates_length_of` which compares day counts (causing `1.month` to use ~30.44 day averages), this validator uses date arithmetic so that February (28 or 29 days) correctly satisfies `minimum_duration: 1.month`:
+
+```ruby
+validates :period, date_range: { minimum_duration: 1.month }
+validates :period, date_range: { maximum_duration: 1.year }
+validates :period, date_range: { exact_duration: 3.months }
+validates :period, date_range: { duration: 1.month..1.year }
+validates :period, date_range: { bounded: true }
+validates :period, date_range: { full_periods_of: :month }
+validates :period, date_range: { starts_on: :beginning_of_month }
+validates :period, date_range: { ends_on: :end_of_month }
+validates :period, date_range: { covers: -> { Date.today } }
+```
+
+  *Edwin Vlieg*
+
 ## 0.5.1
 
 * Return `Float::INFINITY` from `size` for boundless ranges, making `validates_length_of` correctly reject them.

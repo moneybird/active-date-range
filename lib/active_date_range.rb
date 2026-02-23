@@ -12,6 +12,7 @@ require "active_date_range/version"
 require "active_date_range/date_range"
 require "active_date_range/humanizer"
 require "active_date_range/active_model_type"
+require "active_date_range/validators" if defined?(ActiveModel)
 
 module ActiveDateRange
   class Error < StandardError; end
