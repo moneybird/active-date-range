@@ -16,7 +16,7 @@ require "active_date_range/validators" if defined?(ActiveModel)
 
 module ActiveDateRange
   def self.deprecator
-    @deprecator ||= ActiveSupport::Deprecation.new("0.6.0", "ActiveDateRange")
+    @deprecator ||= ActiveSupport::Deprecation.new("in a future version", "ActiveDateRange")
   end
 
   class Error < StandardError; end

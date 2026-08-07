@@ -10,7 +10,7 @@ module ActiveDateRange
     def initialize(safe_parse: false, safe: nil)
       unless safe.nil?
         ActiveDateRange.deprecator.warn(
-          "The safe: option is deprecated and will be removed from ActiveDateRange 0.6.0. " \
+          "The safe: option is deprecated and will be removed in a future version. " \
           "Use safe_parse: instead."
         )
         safe_parse = safe
