@@ -55,6 +55,14 @@ ActiveDateRange::DateRange.parse('20210101..20210115')
 
 Parse accepts three formats: `YYYYMM..YYYYMM`, `YYYYMMDD..YYYYMMDD` and any short hand like `this_month`.
 
+`parse` raises `InvalidDateRangeFormat` or `InvalidDateRange` on input it can't handle. For input you don't control, like a query parameter or a form field, use `safe_parse` instead. It returns `nil` in those cases, the same way `safe_constantize` relates to `constantize`:
+
+```ruby
+ActiveDateRange::DateRange.safe_parse('202101..202112') # => DateRange(2021-01-01..2021-12-31)
+ActiveDateRange::DateRange.safe_parse('banana')         # => nil
+ActiveDateRange::DateRange.safe_parse('202112..202101') # => nil
+```
+
 ### The date range instance
 
 A `DateRange` object is an extension of a regular `Range` object. You can use [all methods available on `Range`](https://ruby-doc.org/core-3.0.0/Range.html):
