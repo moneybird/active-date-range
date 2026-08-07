@@ -59,7 +59,7 @@ Parse accepts three formats: `YYYYMM..YYYYMM`, `YYYYMMDD..YYYYMMDD` and any shor
 
 ```ruby
 ActiveDateRange::DateRange.safe_parse('202101..202112') # => DateRange(2021-01-01..2021-12-31)
-ActiveDateRange::DateRange.safe_parse('banana')         # => nil
+ActiveDateRange::DateRange.safe_parse('test')           # => nil
 ActiveDateRange::DateRange.safe_parse('202112..202101') # => nil
 ```
 

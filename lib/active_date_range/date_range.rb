@@ -46,7 +46,7 @@ module ActiveDateRange
     # input you don't control, like a query parameter or a form field.
     #
     #   DateRange.safe_parse("202101..202112") # => DateRange(2021-01-01..2021-12-31)
-    #   DateRange.safe_parse("banana")         # => nil
+    #   DateRange.safe_parse("test")           # => nil
     #   DateRange.safe_parse("202112..202101") # => nil
     def self.safe_parse(input)
       parse(input)
