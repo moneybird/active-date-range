@@ -7,15 +7,7 @@ module ActiveDateRange
     # raising:
     #
     #   attribute :period, :date_range, safe_parse: true
-    def initialize(safe_parse: false, safe: nil)
-      unless safe.nil?
-        ActiveDateRange.deprecator.warn(
-          "The safe: option is deprecated and will be removed in a future version. " \
-          "Use safe_parse: instead."
-        )
-        safe_parse = safe
-      end
-
+    def initialize(safe_parse: false)
       @safe_parse = safe_parse
       super()
     end

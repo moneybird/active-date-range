@@ -45,20 +45,4 @@ class ActiveDateRangeAttributesTest < ActiveSupport::TestCase
     report.period = "202503..202501"
     assert_nil report.period
   end
-
-  def test_deprecated_safe_option_still_works
-    report_class = nil
-
-    assert_deprecated("safe_parse", ActiveDateRange.deprecator) do
-      report_class = Class.new do
-        include ActiveModel::Attributes
-
-        attribute :period, :date_range, safe: true
-      end
-    end
-
-    report = report_class.new
-    report.period = "unknown"
-    assert_nil report.period
-  end
 end
