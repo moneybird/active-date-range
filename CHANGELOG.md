@@ -8,7 +8,15 @@ DateRange.safe_parse("test")           # => nil
 DateRange.safe_parse("202112..202101") # => nil
 ```
 
-  *Wessel Schoppers*
+  *wesselmoneybird*
+
+* Add a `safe: true` option to the `:date_range` ActiveModel type, which casts to `nil` instead of raising. Use it for attributes fed by input you don't control, so a validation can report the problem:
+
+```ruby
+attribute :period, :date_range, safe: true
+```
+
+  *wesselmoneybird*
 
 ## 0.5.2
 

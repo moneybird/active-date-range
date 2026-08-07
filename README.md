@@ -134,6 +134,21 @@ class Report
 end
 ```
 
+The attribute raises on a value it can't parse. For an attribute fed by input you don't control, like a query parameter or a form field, pass `safe: true`. The attribute then casts to `nil` instead, so a validation can report the problem:
+
+```ruby
+class ReportFilter
+  include ActiveModel::Attributes
+  include ActiveModel::Validations
+
+  attribute :period, :date_range, safe: true
+
+  validates :period, date_range: { bounded: true }
+end
+
+ReportFilter.new(period: "test").period # => nil
+```
+
 ### Usage example
 
 Use the shorthands to link to a specific period:
