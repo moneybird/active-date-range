@@ -125,6 +125,18 @@ class ActiveDateRangeDateRangeTest < ActiveSupport::TestCase
     end
   end
 
+  def test_safe_parse
+    assert_equal described_class.new(Date.new(2021, 1, 1), Date.new(2021, 12, 31)), described_class.safe_parse(Date.new(2021, 1, 1)..Date.new(2021, 12, 31))
+    assert_equal described_class.new(Date.new(2013, 5, 1), Date.new(2013, 9, 1).at_end_of_month), described_class.safe_parse("201305..201309")
+    assert_equal described_class.new(Date.new(2014, 4, 15), Date.new(2014, 5, 23)), described_class.safe_parse("20140415..20140523")
+    assert_equal described_class.prev_year, described_class.safe_parse("prev_year")
+    assert_nil described_class.safe_parse(nil)
+    %w[2012..2013 2013011..2013051 foobar month 20-1301..20-1305 20160925..20160931].each do |format|
+      assert_nil described_class.safe_parse(format)
+    end
+    assert_nil described_class.safe_parse("202503..202501")
+  end
+
   def test_addition
     a = described_class.new(Date.new(2021, 1, 1)..Date.new(2021, 1, 31))
     b = described_class.new(Date.new(2021, 2, 1)..Date.new(2021, 2, 28))

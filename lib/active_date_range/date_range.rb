@@ -41,6 +41,19 @@ module ActiveDateRange
       DateRange.new(parse_date(begin_date), parse_date(end_date, last: true))
     end
 
+    # Parses a date range string like #parse, but returns nil when the input isn't a valid date
+    # range, the same way <tt>safe_constantize</tt> relates to <tt>constantize</tt>. Use this for
+    # input you don't control, like a query parameter or a form field.
+    #
+    #   DateRange.safe_parse("202101..202112") # => DateRange(2021-01-01..2021-12-31)
+    #   DateRange.safe_parse("test")           # => nil
+    #   DateRange.safe_parse("202112..202101") # => nil
+    def self.safe_parse(input)
+      parse(input)
+    rescue InvalidDateRangeFormat, InvalidDateRange
+      nil
+    end
+
     def self.parse_date(input, last: false)
       return if input.blank?
 

@@ -1,3 +1,23 @@
+## 0.5.3
+
+* Add `safe_parse`, which returns `nil` instead of raising for input that isn't a valid date range. Use it for input you don't control, like a query parameter or a form field:
+
+```ruby
+DateRange.safe_parse("202101..202112") # => DateRange(2021-01-01..2021-12-31)
+DateRange.safe_parse("test")           # => nil
+DateRange.safe_parse("202112..202101") # => nil
+```
+
+  *wesselmoneybird*
+
+* Add a `safe: true` option to the `:date_range` ActiveModel type, which casts to `nil` instead of raising. Use it for attributes fed by input you don't control, so a validation can report the problem:
+
+```ruby
+attribute :period, :date_range, safe: true
+```
+
+  *wesselmoneybird*
+
 ## 0.5.2
 
 * Add calendar-aware `DateRangeValidator` for ActiveModel validations. Unlike `validates_length_of` which compares day counts (causing `1.month` to use ~30.44 day averages), this validator uses date arithmetic so that February (28 or 29 days) correctly satisfies `minimum_duration: 1.month`:

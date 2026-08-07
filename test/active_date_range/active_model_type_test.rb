@@ -21,4 +21,28 @@ class ActiveDateRangeAttributesTest < ActiveSupport::TestCase
     report.period = "unknown"
     assert_raises(ActiveDateRange::InvalidDateRangeFormat) { report.period }
   end
+
+  class SafeTestReport
+    include ActiveModel::Attributes
+
+    attribute :period, :date_range, safe: true
+  end
+
+  def test_safe_date_range_conversion
+    report = SafeTestReport.new
+    report.period = "this_month"
+    assert_equal ActiveDateRange::DateRange.this_month, report.period
+  end
+
+  def test_safe_date_range_conversion_returns_nil
+    report = SafeTestReport.new
+    report.period = "unknown"
+    assert_nil report.period
+  end
+
+  def test_safe_date_range_conversion_returns_nil_for_reversed_range
+    report = SafeTestReport.new
+    report.period = "202503..202501"
+    assert_nil report.period
+  end
 end
