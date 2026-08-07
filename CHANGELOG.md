@@ -1,3 +1,13 @@
+## 0.5.4
+
+* Rename the `safe:` option on the `:date_range` ActiveModel type to `safe_parse:`. On an attribute, `safe: true` reads as a claim that the value is trusted, while it actually describes how the value is parsed. `safe:` keeps working but is deprecated and will be removed in 0.6.0:
+
+```ruby
+attribute :period, :date_range, safe_parse: true
+```
+
+  *wesselmoneybird*
+
 ## 0.5.3
 
 * Add `safe_parse`, which returns `nil` instead of raising for input that isn't a valid date range. Use it for input you don't control, like a query parameter or a form field:

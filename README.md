@@ -134,14 +134,14 @@ class Report
 end
 ```
 
-The attribute raises on a value it can't parse. For an attribute fed by input you don't control, like a query parameter or a form field, pass `safe: true`. The attribute then casts to `nil` instead, so a validation can report the problem:
+The attribute raises on a value it can't parse. For an attribute fed by input you don't control, like a query parameter or a form field, pass `safe_parse: true`. The attribute then casts through `safe_parse`, so it returns `nil` instead and a validation can report the problem:
 
 ```ruby
 class ReportFilter
   include ActiveModel::Attributes
   include ActiveModel::Validations
 
-  attribute :period, :date_range, safe: true
+  attribute :period, :date_range, safe_parse: true
 
   validates :period, date_range: { bounded: true }
 end
