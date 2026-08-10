@@ -1,6 +1,6 @@
 ## 0.6.0
 
-* **Breaking:** rename the `safe:` option on the `:date_range` ActiveModel type to `safe_parse:`. On an attribute, `safe: true` reads as a claim that the value is trusted, while it actually describes how the value is parsed. The option was introduced in 0.5.3 and `safe:` now raises an `ArgumentError`:
+Rename the `safe:` option on the `:date_range` ActiveModel type to `safe_parse:`. On an attribute, `safe: true` reads as a claim that the value is trusted, while it actually describes how the value is parsed. The option was introduced in 0.5.3 and `safe:` now raises an `ArgumentError`:
 
 ```ruby
 attribute :period, :date_range, safe_parse: true
