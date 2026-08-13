@@ -53,7 +53,10 @@ module ActiveDateRange
         end
 
         def validate_duration(record, attribute, value)
-          return if value.boundless?
+          if value.boundless?
+            validate_duration_boundless(record, attribute, value)
+            return
+          end
 
           if options[:duration]
             range = resolve_value(record, options[:duration])
@@ -75,6 +78,33 @@ module ActiveDateRange
             duration = resolve_value(record, options[:exact_duration])
             validate_exact_duration(record, attribute, value, duration)
           end
+        end
+
+        # A boundless range has infinite size, so it always meets a minimum_duration and never
+        # meets a maximum_duration or exact_duration. Its size can't be compared through date
+        # arithmetic (one side is nil), so these are reported directly instead of going through
+        # meets_maximum_duration?/meets_minimum_duration?.
+        def validate_duration_boundless(record, attribute, value)
+          if options[:duration]
+            range = resolve_value(record, options[:duration])
+            add_duration_too_long_error(record, attribute, range.end) if range.end
+          end
+
+          add_duration_too_long_error(record, attribute, options[:maximum_duration]) if options[:maximum_duration]
+
+          if options[:exact_duration]
+            duration = resolve_value(record, options[:exact_duration])
+            record.errors.add(attribute, :wrong_duration,
+              duration: humanize_duration(duration),
+              **options.except(*known_options))
+          end
+        end
+
+        def add_duration_too_long_error(record, attribute, duration)
+          duration = resolve_value(record, duration)
+          record.errors.add(attribute, :duration_too_long,
+            duration: humanize_duration(duration),
+            **options.except(*known_options))
         end
 
         def validate_minimum_duration(record, attribute, value, duration)

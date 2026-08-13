@@ -170,6 +170,20 @@ class DateRangeValidatorTest < ActiveSupport::TestCase
     assert_includes model.errors[:period], "is too long (maximum duration is 1 year)"
   end
 
+  def test_maximum_duration_rejects_boundless_end
+    model = MaximumDurationModel.new
+    model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), nil)
+    assert_not model.valid?
+    assert_includes model.errors[:period], "is too long (maximum duration is 1 year)"
+  end
+
+  def test_maximum_duration_rejects_boundless_begin
+    model = MaximumDurationModel.new
+    model.period = ActiveDateRange::DateRange.new(nil, Date.new(2024, 12, 31))
+    assert_not model.valid?
+    assert_includes model.errors[:period], "is too long (maximum duration is 1 year)"
+  end
+
   # exact_duration
   def test_exact_duration_valid
     model = ExactDurationModel.new
@@ -188,6 +202,13 @@ class DateRangeValidatorTest < ActiveSupport::TestCase
     model = ExactDurationModel.new
     model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), Date.new(2024, 6, 30))
     assert_not model.valid?
+  end
+
+  def test_exact_duration_rejects_boundless
+    model = ExactDurationModel.new
+    model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), nil)
+    assert_not model.valid?
+    assert_includes model.errors[:period], "has the wrong duration (should be 3 months)"
   end
 
   # duration range
@@ -209,6 +230,28 @@ class DateRangeValidatorTest < ActiveSupport::TestCase
     model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), Date.new(2025, 6, 30))
     assert_not model.valid?
     assert model.errors[:period].any? { |e| e.include?("too long") }
+  end
+
+  def test_duration_range_rejects_boundless_when_max_present
+    model = DurationRangeModel.new
+    model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), nil)
+    assert_not model.valid?
+    assert model.errors[:period].any? { |e| e.include?("too long") }
+  end
+
+  def test_duration_range_allows_boundless_when_no_max
+    klass = Class.new do
+      include ActiveModel::Model
+      include ActiveModel::Attributes
+
+      attribute :period, :date_range
+
+      validates :period, date_range: { duration: 1.month.. }
+    end
+
+    model = klass.new
+    model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), nil)
+    assert model.valid?
   end
 
   # full_periods_of
