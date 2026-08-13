@@ -282,6 +282,13 @@ class DateRangeValidatorTest < ActiveSupport::TestCase
     assert_includes model.errors[:period], "must start at the beginning of month"
   end
 
+  def test_starts_on_boundless
+    model = StartsOnModel.new
+    model.period = ActiveDateRange::DateRange.new(nil, Date.new(2024, 2, 15))
+    assert_not model.valid?
+    assert_includes model.errors[:period], "must start at the beginning of month"
+  end
+
   # ends_on
   def test_ends_on_valid
     model = EndsOnModel.new
@@ -292,6 +299,13 @@ class DateRangeValidatorTest < ActiveSupport::TestCase
   def test_ends_on_invalid
     model = EndsOnModel.new
     model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), Date.new(2024, 1, 15))
+    assert_not model.valid?
+    assert_includes model.errors[:period], "must end at the end of month"
+  end
+
+  def test_ends_on_boundless
+    model = EndsOnModel.new
+    model.period = ActiveDateRange::DateRange.new(Date.new(2024, 1, 1), nil)
     assert_not model.valid?
     assert_includes model.errors[:period], "must end at the end of month"
   end
