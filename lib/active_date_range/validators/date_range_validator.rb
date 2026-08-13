@@ -53,8 +53,6 @@ module ActiveDateRange
         end
 
         def validate_duration(record, attribute, value)
-          return if value.boundless?
-
           if options[:duration]
             range = resolve_value(record, options[:duration])
             validate_minimum_duration(record, attribute, value, range.begin) if range.begin
@@ -103,11 +101,13 @@ module ActiveDateRange
 
         # Calendar-aware: Feb 1..Feb 28 with 1.month → begin + 1.month - 1.day = Feb 28 <= Feb 28 ✓
         def meets_minimum_duration?(range, duration)
+          return true if range.boundless?
           range.begin + duration - 1.day <= range.end
         end
 
         # Calendar-aware: Jan 1..Dec 31 with 1.year → begin + 1.year - 1.day = Dec 31 >= Dec 31 ✓
         def meets_maximum_duration?(range, duration)
+          return false if range.boundless?
           range.begin + duration - 1.day >= range.end
         end
 
@@ -139,16 +139,17 @@ module ActiveDateRange
 
         def validate_ends_on(record, attribute, value)
           return unless options[:ends_on]
-          return if value.end.nil?
 
           alignment = options[:ends_on].to_sym
-          checker = END_ALIGNMENT_MAP[alignment]
+          unless value.end.nil?
+            checker = END_ALIGNMENT_MAP[alignment]
 
-          unless checker&.call(value)
-            record.errors.add(attribute, :misaligned_end,
-              alignment: alignment.to_s.tr("_", " "),
-              **options.except(*known_options))
+            return if checker&.call(value)
           end
+
+          record.errors.add(attribute, :misaligned_end,
+            alignment: alignment.to_s.tr("_", " "),
+            **options.except(*known_options))
         end
 
         def validate_covers(record, attribute, value)

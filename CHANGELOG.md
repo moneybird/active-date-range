@@ -1,3 +1,7 @@
+## 0.6.1
+
+Fix `DateRangeValidator` accepting boundless ranges when `maximum_duration:`, `exact_duration:` or `duration:` is configured. A boundless range has infinite size, so it must fail these checks, but the validator returned early for any boundless range and skipped all duration checks. This let a range parsed from untrusted input, for example `safe_parse("202101..")`, bypass a configured maximum. `minimum_duration:` is unaffected, since an infinite range always satisfies a minimum.
+
 ## 0.6.0
 
 Rename the `safe:` option on the `:date_range` ActiveModel type to `safe_parse:`. On an attribute, `safe: true` reads as a claim that the value is trusted, while it actually describes how the value is parsed. The option was introduced in 0.5.3 and `safe:` now raises an `ArgumentError`:
